@@ -32,7 +32,9 @@ void PhiIntegration(TFile* inputFile, TFile* outputFile, const char* target) {
                                 Q2Counter, NuCounter, ZhCounter, nPion), "", N_Pt2, Pt2_BINS);
                     for(int Pt2Counter = 0 ; Pt2Counter < N_Pt2 ; Pt2Counter++) { // Loops in Pt2 
                         // Take the hist for this bins
-                        TH1F* histPhi = (TH1F*) inputFile->Get(Form("DataCorr2_%s_%i%i%i%i_%i", 
+                        //TH1F* histPhi = (TH1F*) inputFile->Get(Form("DataCorr2_%s_%i%i%i%i_%i", 
+                                    //target, Q2Counter, NuCounter, ZhCounter, Pt2Counter, nPion));
+                        TH1F* histPhi = (TH1F*) inputFile->Get(Form("DataCorr_%s_%i%i%i%i_%i", 
                                     target, Q2Counter, NuCounter, ZhCounter, Pt2Counter, nPion));
                         // If the histogram is null or empty skip this Pt2 bin
                         if(histPhi == NULL){ continue; }

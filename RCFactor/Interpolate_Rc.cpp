@@ -52,7 +52,7 @@ int InterpolationRc(std::string target, TFile* fileRc, TFile* fileRcInter) {
                 for(int ZhCounter = 0 ; ZhCounter < N_Zh; ZhCounter++) { // Loops Zh bins;
 
                      //---------------------- Low Pt2 Interpolation  ------------------ 
-                    for(int Pt2Counter = 1 ; Pt2Counter < MaxPt; Pt2Counter++) { // Pt2 bins;
+                    for(int Pt2Counter = 0 ; Pt2Counter < MaxPt; Pt2Counter++) { // Pt2 bins;
 
                         // Read the actual bin an the two neiberhoods
 

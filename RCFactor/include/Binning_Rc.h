@@ -1,7 +1,6 @@
 #include "TString.h"
-const TString dataDirectory  = "/home/matias/proyecto/Pt2Broadening_multi-pion/Data/";
-const TString inputDirectory  = "/home/matias/proyecto/TwoPionAnalysis/Data/Nominal/";
-const TString outputDirectory = "/home/matias/proyecto/TwoPionAnalysis/Data/Nominal/";
+const TString inputDirectory  = "/home/matias/proyecto/TwoPionAnalysis/Data/Acc2/";
+const TString outputDirectory = "/home/matias/proyecto/TwoPionAnalysis/Data/Acc2/";
 
 const int UseCutOff = 1; // Select 1 Use the Cutoff and the interpolation
 			// Select 2 Use the Cutoff 

@@ -1,5 +1,5 @@
 // It can be compile with
-// g++ -Wall -fpic  `root-config --cflags` duplicateSimulTuple.cpp -o ./bin/duplicateSimulTuple `root-config --glibs`
+// g++ -Wall -fpic  `root-config --cflags` duplicateSimulTuple.cpp -o ../bin/duplicateSimulTuple `root-config --glibs`
 // For the target name use (D,C,Fe,Pb)
 
 #include <iostream>
@@ -19,6 +19,7 @@ int main(int argc, char* argv[]) {
 
   TStopwatch t;
 
+const TString dataDirectory  = "/home/matias/proyecto/Pt2Broadening_multi-pion/Data/";
   // For the Target name use (D,C,Fe,Pb)
   std::string target = argv[1];
   // Creating a array of chars instead of a string to use Form method

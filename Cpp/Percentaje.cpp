@@ -9,10 +9,10 @@
 
 int main() {
 
-  TString compareDirectory = "~/proyecto/TwoPionAnalysis/Data/Test/";
-  TString standarDirectory = "~/proyecto/TwoPionAnalysis/Data/Test/";
+  TString compareDirectory = "~/proyecto/TwoPionAnalysis/Data/Acc2/";
+  TString standarDirectory = "~/proyecto/TwoPionAnalysis/Data/Acc2/";
   
-  //TFile* fileStandar;
+  TFile* fileStandar;
   //if(UseCutOff == 1) { 
     //fileStandar = new TFile(standarDirectory   + "Pt_broad_hist_Zh_Inter.root", "READ");
   //}
@@ -25,8 +25,10 @@ int main() {
 
   //TFile* fileCompare = new TFile(compareDirectory + "Pt_broad_hist_Zh.root", "READ");
 
-  TFile* fileStandar = new TFile(standarDirectory   + "Pt_broad_hist_Zh.root", "READ");
-  TFile* fileCompare = new TFile(compareDirectory + "Pt_broad_hist_Zh_Evnt.root",  "READ");
+  fileStandar = new TFile(standarDirectory   + "Pt_broad_hist_Zh.root", "READ");
+  //TFile* fileStandar = new TFile(standarDirectory   + "Pt_broad_hist_Zh_Normal.root", "READ");
+  //TFile* fileCompare = new TFile(compareDirectory + "Pt_broad_hist_Zh_Normal.root",  "READ");
+  TFile* fileCompare = new TFile(compareDirectory + "Pt_broad_hist_Zh_Acc.root",  "READ");
 
   
   TH1F *standarHist[3][3], *compareHist[3][3], *sustracHist[3][3], *divideHist[3][3];

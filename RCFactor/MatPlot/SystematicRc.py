@@ -10,7 +10,7 @@ plt.style.use(hep.style.ATLAS)  # or ATLAS/LHCb2
 ZhShift  = 0.015
 
 # Upper limmit in the y axis
-YLimit = 50
+YLimit = 40
 
 nPion = 2
 N_Zh  = 8
@@ -83,7 +83,7 @@ def SystematicError():
         axs[i][1].annotate(r'Iron',   xy = (0.04, 1.04), xycoords = 'axes fraction', fontsize = 15)
         axs[i][2].annotate(r'Lead',   xy = (0.04, 1.04), xycoords = 'axes fraction', fontsize = 15)
 
-        axs[i][0].legend(frameon = False, loc = 'upper left', fontsize = 11)
+        axs[i][0].legend(frameon = False, loc = 'upper right', fontsize = 11)
 
     fig.align_ylabels(axs[:])
 

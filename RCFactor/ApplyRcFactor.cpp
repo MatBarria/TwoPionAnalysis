@@ -48,7 +48,9 @@ int ApplyRC(std::string target, TFile* fileData, TFile* fileRcFactors, TFile* fi
                 for(int ZhCounter = 0; ZhCounter < N_Zh; ZhCounter++) { // Loops Zh bins
                     for(int Pt2Counter = 0; Pt2Counter < N_Pt2; Pt2Counter++) { // Loops Pt2 bin
 
-                        TH1F *histData = (TH1F*) fileData->Get(Form("DataCorr2_%s_%i%i%i%i_%i", 
+                        //TH1F *histData = (TH1F*) fileData->Get(Form("DataCorr2_%s_%i%i%i%i_%i", 
+                                //targetArr, Q2Counter, NuCounter, ZhCounter, Pt2Counter, nPion));
+                        TH1F *histData = (TH1F*) fileData->Get(Form("DataCorr_%s_%i%i%i%i_%i", 
                                 targetArr, Q2Counter, NuCounter, ZhCounter, Pt2Counter, nPion));
                         TH1F *histRc = (TH1F*) fileRcFactors->Get(Form("RcFactor_%s_%i%i%i%i_%i",
                                 targetArr, Q2Counter, NuCounter, ZhCounter, Pt2Counter, nPion));

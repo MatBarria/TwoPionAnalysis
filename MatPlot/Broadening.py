@@ -15,7 +15,7 @@ FullShft = 0.0375
 FullYlimit = 0.035
 ZhYlimit   = 0.09
 
-nPion = 2;
+nPion = 3;
 
 left, width = .25, .5
 bottom, height = .25, .5

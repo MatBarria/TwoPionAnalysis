@@ -88,11 +88,11 @@ int AcceptanceCorrection(std::string target, TFile* fileOutput) {
     std::cout << Form("Simul target %s, Target %s", simulTarget, targetArr) << std::endl;
 
     // Create all the necessary histograms
-    TH1F* histTotDetected = new TH1F("TotDetected",   "", N_Phi, -180, 180);
-    TH1F* histThrown      = new TH1F("Thrown",        "", N_Phi, -180, 180);
-    TH1F* histData        = new TH1F("Data",          "", N_Phi, -180, 180);
-    TH1F* histAccFactors  = new TH1F("AccFactor",     "", N_Phi, -180, 180);
-    TH1F* histDataCorr    = new TH1F("DataCorr",      "", N_Phi, -180, 180);
+    TH1F* histTotDetected = new TH1F("TotDetected", "", N_Phi, -180, 180);
+    TH1F* histThrown      = new TH1F("Thrown",      "", N_Phi, -180, 180);
+    TH1F* histData        = new TH1F("Data",        "", N_Phi, -180, 180);
+    TH1F* histAccFactors  = new TH1F("AccFactor",   "", N_Phi, -180, 180);
+    TH1F* histDataCorr    = new TH1F("DataCorr",    "", N_Phi, -180, 180);
 
     // Store the sum of the weights A.K.A the erros (in the others is done by default)
     histData->Sumw2();
@@ -152,11 +152,12 @@ int AcceptanceCorrection(std::string target, TFile* fileOutput) {
                     for(int Pt2Counter = 0; Pt2Counter < N_Pt2; Pt2Counter++) { // Loops in every Pt2 bin
 
                         // Select the Pt2 bin
-                        Pt2Cut      = Form("Pt2>%f&&Pt2<%f", Pt2_BINS[Pt2Counter], Pt2_BINS[Pt2Counter+1]);
+                        Pt2Cut      = Form("Pt2>%f&&Pt2<%f", Pt2_BINS[Pt2Counter], 
+                                            Pt2_BINS[Pt2Counter+1]);
                         Pt2Cut_gen  = Form("Pt2_gen>%f&&Pt2_gen<%f", Pt2_BINS[Pt2Counter], 
-                                Pt2_BINS[Pt2Counter+1]);
+                                            Pt2_BINS[Pt2Counter+1]);
                         Pt2Cut_rec  = Form("Pt2_rec>%f&&Pt2_rec<%f", Pt2_BINS[Pt2Counter],
-                                Pt2_BINS[Pt2Counter+1]);
+                                            Pt2_BINS[Pt2Counter+1]);
 
                         ntupleData->Project("Data", "PhiPQ", Pt2Cut);
                         if(EmptyHist(histData) == 1){ continue; } // Skip the bin id there isn't any event 
