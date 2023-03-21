@@ -29,8 +29,8 @@ def Pt2Distribution():
                 height = width / 1.2
                 fig.set_size_inches(width, height)
 
-                graphNameAcc = "Pt2_Distribution_" + tarList[i] + "_" + str(k) + "_" + str(j+1)
-                graphNameRc  = "Pt2_Distribution_Rc_"  + tarList[i] + "_" + str(k) + "_" + str(j+1)
+                graphNameAcc = "Pt2_Distribution_Inter_" + tarList[i] + "_" + str(k) + "_" + str(j+1)
+                graphNameRc  = "Pt2_Distribution_Inter_"  + tarList[i] + "_" + str(k) + "_" + str(j+1)
                 graphAcc     = fileAcc.Get(graphNameAcc)
                 graphRc      = fileRc.Get(graphNameRc)
                 nPoints = [graphAcc.GetN(), graphRc.GetN()]

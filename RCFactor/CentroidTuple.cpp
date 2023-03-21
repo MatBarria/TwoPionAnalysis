@@ -21,16 +21,16 @@ int main(){
 
     std::cout << "PhiPQ C" << std::endl;
     PhiPQ("C");
-    std::cout << "PhiPQ Fe" << std::endl;
-    PhiPQ("Fe");
-    std::cout << "PhiPQ Pb" << std::endl;
-    PhiPQ("Pb");
-    std::cout << "PhiPQ DC" << std::endl;
-    PhiPQ("DC");
-    std::cout << "PhiPQ DFe" << std::endl;
-    PhiPQ("DFe");
-    std::cout << "PhiPQ DPb" << std::endl;
-    PhiPQ("DPb");
+    //std::cout << "PhiPQ Fe" << std::endl;
+    //PhiPQ("Fe");
+    //std::cout << "PhiPQ Pb" << std::endl;
+    //PhiPQ("Pb");
+    //std::cout << "PhiPQ DC" << std::endl;
+    //PhiPQ("DC");
+    //std::cout << "PhiPQ DFe" << std::endl;
+    //PhiPQ("DFe");
+    //std::cout << "PhiPQ DPb" << std::endl;
+    //PhiPQ("DPb");
 
     return 0;
 }

@@ -19,12 +19,16 @@ ZhBinning = [0.075, 0.2, 0.3, 0.4,0.5, 0.6, 0.8, 1.03]
 
 dic_label_sys = { "DZLow"   : "$\Delta Z < 2.5$ cm",
                   "DZHigh"  : "$\Delta Z < 3.5$ cm",
-                  "70Bins"  :  "70 $Pt^2$ bins",
-                  "110Bins" :  "110 $Pt^2$ bins",
-                  "VC_RD"   :  "Vertex Cut RD",
-                  "VC_HH"   :  "Vertex Cut HH",
-                  "Normal"  :  "Cut off applied",
-                  "Cutoff"  :  "No background subtraction", 
+                  "70Bins"  : "70 $Pt^2$ bins",
+                  "110Bins" : "110 $Pt^2$ bins",
+                  "VC_RD"   : "Vertex Cut RD",
+                  "VC_HH"   : "Vertex Cut HH",
+                  "Normal"  : "Cut off applied",
+                  "Cutoff"  : "No background subtraction", 
+                  "TOFLow"  : "TOF Cut P < 2.5 GeV", 
+                  "TOFHigh" : "TOF Cut P < 2.9 GeV", 
+                  "NAccept0": "N Accept $\geq$ 0",
+                  "NAccept2": "N Accept $\geq$ 2",
                  }
 
 dicPlotName = {   "DZLow"   : "DZ_Cut",
@@ -35,6 +39,10 @@ dicPlotName = {   "DZLow"   : "DZ_Cut",
                   "VC_HH"   : "Vertex_Cut",
                   "Normal"  : "BG_Subtraction",
                   "Cutoff"  : "BG_Subtraction", 
+                  "TOFHigh" : "TOF_Cut",
+                  "TOFLow"  : "TOF_Cut", 
+                  "NAccept0": "N_Accept",
+                  "NAccept2": "N_Accept",
                  }
 
 tarList      = ["C", "Fe", "Pb"]
@@ -71,7 +79,6 @@ def SystematicError(systematic):
 
             for s in range(2):
 
-
                 graphNameSys = "PtBroad_Zh_" + tarList[i] + "_" + str(j)
                 graphSys     = fileSystematic[s].Get(graphNameSys)
 
@@ -83,9 +90,11 @@ def SystematicError(systematic):
                 y  = np.ndarray(nPointsNom, dtype = float, buffer = graphNom.GetY())
                 ey = np.ndarray(nPointsNom, dtype = float, buffer = graphNom.GetEY())
 
+                print("target: " + tarList[i])
+                print("N pions: " + str(j+1))
                 print("Sys: " + systematic[s])
-                print(ySys)
                 ySys = np.absolute((y-ySys)/ySys)*100              
+                print(ySys)
 
                 # Generate the plot
                 axs[j][i].plot(xSys, ySys, marker = markerList[s], linestyle = "", 
@@ -94,10 +103,10 @@ def SystematicError(systematic):
 
                 # Extrac the data from the TGraph
 
-            print("Nom y: " + tarList[i] + str(j))
-            print(y)
-            print("Nom y error: "+ tarList[i] + str(j))
-            print(ey)
+            # print("Nom y: " + tarList[i] + str(j))
+            # print(y)
+            # print("Nom y error: "+ tarList[i] + str(j))
+            # print(ey)
             NomError = [0,0,0,0,0,0,0,0]
 
             NomError[0] = (ey[1]*100)/y[1]
@@ -131,7 +140,7 @@ def SystematicError(systematic):
         axs[i][2].annotate(r'Lead',   xy = (0.04, 1.04), xycoords = 'axes fraction', 
                            fontsize = 15)
 
-        axs[i][0].legend(frameon = False, loc = 'upper right', fontsize = 11)
+        axs[i][0].legend(frameon = False, loc = 'upper center', fontsize = 11)
 
     fig.align_ylabels(axs[:])
 
@@ -147,3 +156,8 @@ def SystematicError(systematic):
 
 
 SystematicError(["Normal", "Cutoff"])
+SystematicError(["70Bins", "110Bins"])
+SystematicError(["DZLow",  "DZHigh"])
+SystematicError(["VC_RD",  "VC_HH"])
+SystematicError(["TOFLow", "TOFHigh"])
+SystematicError(["NAccept0", "NAccept2"])

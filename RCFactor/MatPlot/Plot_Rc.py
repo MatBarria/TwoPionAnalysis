@@ -29,7 +29,8 @@ def PtBroadZhTarSplit():
                         hspace = 0.02)
 
 
-    file = ROOT.TFile.Open(inputDirectory + "Pt_broad_Zh_Rc.root", "READ")
+    fileRC = ROOT.TFile.Open(inputDirectory + "Pt_broad_Zh_Rc.root", "READ")
+    file = ROOT.TFile.Open(inputDirectory + "Pt_broad_Zh.root", "READ")
 
     tarList   = ["C", "Fe", "Pb"]
     colorList = ["red", "Blue", "black"]
@@ -40,12 +41,13 @@ def PtBroadZhTarSplit():
         axs[i].set_xlim(0.075, 1.03)
         for j in range(nPion): # Loops on the number of pions
             graphName = "PtBroad_Zh_" + tarList[i] + "_" + str(j)
+            graphRC     = fileRC.Get(graphName)
             graph     = file.Get(graphName)
             # Extrac the data from the TGraph
-            nPoints = graph.GetN()
-            x  = np.ndarray(nPoints, dtype = float, buffer = graph.GetX())
+            nPoints = graphRC.GetN()
+            x  = np.ndarray(nPoints, dtype = float, buffer = graphRC.GetX())
             x  = x + (-ZhShift + ZhShift*j) # Shit the data for readability
-            y  = np.ndarray(nPoints, dtype = float, buffer = graph.GetY())
+            y  = np.ndarray(nPoints, dtype = float, buffer = graphRC.GetY())
             ey = np.ndarray(nPoints, dtype = float, buffer = graph.GetEY())
             # Generate the plot
             axs[i].errorbar(x, y, ey, marker = "o", linestyle = "", markerfacecolor = colorList[j],
@@ -71,6 +73,9 @@ def PtBroadZhTarSplit():
 
     fig.savefig(outputDirectory + "PtBroad_Zh_Target_Rc.pdf", bbox_inches = 'tight')
     print(outputDirectory + "PtBroad_Zh_Target-Grid_Rc.pdf Has been created")
+    
+    fileRC.Close()
+    file.Close()
 
 
 
@@ -82,7 +87,7 @@ def PtBroadFullIntegrated():
     height = width / 1.2
     fig.set_size_inches(width, height)
 
-    file = ROOT.TFile.Open(inputDirectory + "Pt_broad_FullIntegrated_Rc.root", "READ")
+    fileRC = ROOT.TFile.Open(inputDirectory + "Pt_broad_FullIntegrated_Rc.root", "READ")
 
     tarList    = ["C", "Fe", "Pb"]
     colorList  = ["red", "Blue", "black"]
@@ -94,12 +99,12 @@ def PtBroadFullIntegrated():
             axs.set_ylim(0, FullYlimit)
             axs.set_xlim(1.5, 6.5)
             graphName = "PtBroad_FullIntegrated_" + tarList[i] + "_" + str(j)
-            graph     = file.Get(graphName)
-            nPoints = graph.GetN()
-            x  = np.ndarray(nPoints, dtype = float, buffer = graph.GetX())
+            graphRC     = fileRC.Get(graphName)
+            nPoints = graphRC.GetN()
+            x  = np.ndarray(nPoints, dtype = float, buffer = graphRC.GetX())
             x  = x + (-FullShft + FullShft*j)
-            y  = np.ndarray(nPoints, dtype = float, buffer = graph.GetY())
-            ey = np.ndarray(nPoints, dtype = float, buffer = graph.GetEY())
+            y  = np.ndarray(nPoints, dtype = float, buffer = graphRC.GetY())
+            ey = np.ndarray(nPoints, dtype = float, buffer = graphRC.GetEY())
             if j == 0:
                 axs.errorbar(x, y, ey, marker = markerList[j], linestyle = "", label = tarList[i],
                              markerfacecolor = colorList[i], color = colorList[i], markersize = 4.5)
@@ -121,7 +126,7 @@ def PtBroadFullIntegrated():
     axs.legend(ncol = 2, frameon = False, loc = 'upper left', fontsize = 11)
 
     fig.savefig(outputDirectory + "PtBroad_FullIntegrated_Rc.pdf", bbox_inches = 'tight')
-    file.Close()
+    fileRC.Close()
     print(outputDirectory + "PtBroad_FullIntegrated_Rc.pdf Has been created")
 
     axs.grid(visible = None, axis = 'both', color = '0.95')

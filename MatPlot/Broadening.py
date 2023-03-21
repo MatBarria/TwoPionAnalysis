@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FormatStrFormatter
 import mplhep as hep
-from include import inputDirectory, outputDirectory
+from include import inputDirectory, outputDirectory, systematicDirectory
 
 plt.style.use(hep.style.ATLAS)  # or ATLAS/LHCb2
 
@@ -15,12 +15,30 @@ FullShft = 0.0375
 FullYlimit = 0.035
 ZhYlimit   = 0.09
 
-nPion = 3;
+nPion = 2;
 
 left, width = .25, .5
 bottom, height = .25, .5
 right = left + width
 top = bottom + height
+    
+tarList    = ["C", "Fe", "Pb"]
+colorList  = ["red", "Blue", "black"]
+nPionList  = ["One $\pi +$", "Two $\pi+$", "Three $\pi +$"]
+markerList = ["o", "s", "D"]
+
+def AddCLasPleliminary(ax):
+     ax.text(0.5, 0.5, 'CLAS Preliminary',
+                 horizontalalignment='center',
+                 verticalalignment='center',
+                 transform=axs[i].transAxes,
+                 color = "lightgrey" ,
+                 fontsize = "xx-large",
+                 fontweight = "bold" ,
+                 alpha = 0.7    ,     
+                 zorder=0
+                 )
+
 
 def PtBroadZhTarSplit():
 
@@ -40,16 +58,7 @@ def PtBroadZhTarSplit():
 
 
     for i in range(3): # Loops on the diffrent targets
-        axs[i].text(0.5, 0.5, 'CLAS Preliminary',
-                 horizontalalignment='center',
-                 verticalalignment='center',
-                 transform=axs[i].transAxes ,
-                 color = "lightgrey" ,
-                 fontsize = "xx-large",
-                 fontweight = "bold" ,
-                 alpha = 0.7    ,     
-                 zorder=0
-                 )
+        # AddCLasPleliminary(axs[i])
         axs[i].set_ylim(0, ZhYlimit)
         axs[i].set_xlim(0.075, 1.03)
         for j in range(nPion): # Loops on the number of pions
@@ -61,10 +70,17 @@ def PtBroadZhTarSplit():
             x  = x + (-ZhShift + ZhShift*2*j) # Shit the data for readability
             y  = np.ndarray(nPoints, dtype = float, buffer = graph.GetY())
             ey = np.ndarray(nPoints, dtype = float, buffer = graph.GetEY())
-            # Generate the plot
+            # Generae the plot
+            print("broadening:")
+            print(y)
+            print("error")
+            print(ey)
             axs[i].errorbar(x, y, ey, marker = "o", linestyle = "",
                             markerfacecolor = colorList[j], color = colorList[j], 
                             markersize = 6, label = labelList[j])
+            # container = axs[i].errorbar(x, y, ey + systematicDiccionary[tarList[i]][j], 
+                            # marker = "", linestyle = "", markerfacecolor = colorList[j], lw = 0,
+                            # color = colorList[j], markersize = 0, capsize = 5)
 
     # Set the labels for the three plots
     axs[0].set_ylabel(r'$\Delta P_\mathrm{T}^{2} [GeV^{2}]$', loc = "center", 
@@ -139,7 +155,7 @@ def PtBroadZhNPionSplit():
         axs[i].set_axisbelow(True)
 
     fig.savefig(outputDirectory + "PtBroad_Zh_NPion.pdf", bbox_inches = 'tight')
-    print(outputDirectory + "PtBroad_Zh_NPion-Grid.pdf Has been created")
+    # print(outputDirectory + "PtBroad_Zh_NPion-Grid.pdf Has been created")
     file.Close()
 
 
@@ -154,26 +170,7 @@ def PtBroadFullIntegrated():
 
     file = ROOT.TFile.Open(inputDirectory + "Pt_broad_FullIntegrated.root", "READ")
 
-    tarList    = ["C", "Fe", "Pb"]
-    colorList  = ["red", "Blue", "black"]
-    nPionList  = ["One $\pi +$", "Two $\pi+$", "Three $\pi +$"]
-    markerList = ["o", "s", "D"]
-
-    # p =plt.Rectangle((left, bottom), width, height, fill=False)
-    # p.set_transform(axs.transAxes)
-    # p.set_clip_on(False)
-    # axs.add_patch(p)
-    axs.text(0.5, 0.5, 'CLAS Preliminary',
-        horizontalalignment='center',
-        verticalalignment='center',
-        transform=axs.transAxes ,
-        color = "lightgrey" ,
-        fontsize = "xx-large",
-        fontweight = "bold" ,
-        alpha = 0.7,     
-        zorder=0
-        )
-
+    # AddCLasPleliminary(Axs)
     for i in range(3): # Loops on the diffrent targets
         for j in range(nPion): # Loops on the number of pions
             axs.set_ylim(0, FullYlimit)
@@ -222,7 +219,55 @@ def PtBroadFullIntegrated():
 
 
 
+def CalculateTotalSystematic(systematics, sysErrorArray, i, j):
 
+    fileNominal = ROOT.TFile.Open(inputDirectory + "Pt_broad_Zh.root", "READ")
+    graphName   = "PtBroad_Zh_" + tarList[i] + "_" + str(j)
+    graphNom    = fileNominal.Get(graphName)
+    nPoints = graphNom.GetN()
+    nomValues  = np.ndarray(nPoints, dtype = float, buffer = graphNom.GetY())
+    fileNominal.Close()
+ 
+    for systematic in systematics:
+        fileSystematic = [ROOT.TFile.Open(systematicDirectory + systematic[0] + 
+                                          "/Pt_broad_Zh.root", "READ"),
+                           ROOT.TFile.Open(systematicDirectory + systematic[1] + 
+                                           "/Pt_broad_Zh.root", "READ")]
+        graphSys     = [fileSystematic[0].Get(graphName), 
+                        fileSystematic[1].Get(graphName)]
+        SysValues = [np.ndarray(nPoints, dtype = float, buffer = graphSys[0].GetY()),
+                     np.ndarray(nPoints, dtype = float, buffer = graphSys[1].GetY())]
+        
+        print(nomValues-SysValues)
+        sysErrorArray += np.square(np.maximum(np.absolute(nomValues-SysValues[0]), 
+                                              np.absolute(nomValues-SysValues[1]))/3**.5)
+        fileSystematic[0].Close()
+        fileSystematic[1].Close()
+    
+    sysErrorArray = np.sqrt(sysErrorArray)
+
+
+systematicDiccionary = { "C"  : [np.repeat(0., 8), np.repeat(0., 8)],
+                         "Fe" : [np.repeat(0., 8), np.repeat(0., 8)],
+                         "Pb" : [np.repeat(0., 8), np.repeat(0., 8)],
+                       }
+
+systematics = [["Normal", "Cutoff"], ["70Bins", "110Bins"], ["DZLow",  "DZHigh"],
+               ["VC_RD",  "VC_HH"], ["TOFLow", "TOFHigh"], ["NAccept0", "NAccept2"]] 
+               
+
+
+def CallCalculateTotalSystemtic(systematicDiccionary):
+
+    for i in range(3): # Loops on the diffrent targets
+        for j in range(nPion): # Loops on the number of pions
+            CalculateTotalSystematic(systematics, systematicDiccionary[tarList[i]][j], i, j)
+            # print(systematicDiccionary[tarList[i]][j])
+
+
+
+# CallCalculateTotalSystemtic(systematicDiccionary)
+# print(systematicDiccionary)
 
 # Call funtions
 PtBroadZhTarSplit()

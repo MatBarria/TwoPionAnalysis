@@ -10,9 +10,9 @@ int main() {
   TStopwatch t;
 
   std::cout << "PhiPQ integration" << std::endl;
-  CallPhiIntegration(   inputDirectory , outputDirectory);
+  CallPhiIntegration(inputDirectory , outputDirectory);
   std::cout << "Q2 and Nu integration" << std::endl;
-  CallQ2NuIntegration(  inputDirectory , outputDirectory);
+  CallQ2NuIntegration(inputDirectory , outputDirectory);
   std::cout << "Pt2 Processing" << std::endl;
   CallPt2Processing(inputDirectory , outputDirectory);
   std::cout << "Zh integration" << std::endl;

@@ -27,7 +27,7 @@ def SystematicError():
     fig.subplots_adjust(left = None, bottom = None, right = None, top = None, wspace = 0.02,
                         hspace = 0.3)
 
-    fileSys = ROOT.TFile.Open(inputDirectory + "Percentaje_Rc.root", "READ")
+    fileSys = ROOT.TFile.Open(inputDirectory + "Pt_broad_Zh_Rc.root", "READ")
     fileNominal = ROOT.TFile.Open(inputDirectory + "Pt_broad_Zh.root", "READ")
 
     tarList      = ["C", "Fe", "Pb"]
@@ -40,24 +40,26 @@ def SystematicError():
         for j in range(nPion): # Loops on the number of pions
             axs[j][i].set_ylim(0, YLimit)
             axs[j][i].set_xlim(0.075, 1.03)
-            graphNameSys = "Percentaje_" + tarList[i] + "_" + str(j+1)
+
+            graphNameSys = "PtBroad_Zh_" + tarList[i] + "_" + str(j)
             graphSys     = fileSys.Get(graphNameSys)
             # Extrac the data from the TGraph
             nPointsSys = graphSys.GetN()
-            xSys  = np.absolute(np.ndarray(nPointsSys, dtype = float, buffer = graphSys.GetX()))
-            # xSys  = xSys + (-ZhShift + ZhShift*j) # Shit the data for readability
+            xSys  = np.ndarray(nPointsSys, dtype = float, buffer = graphSys.GetX())
             ySys  = np.ndarray(nPointsSys, dtype = float, buffer = graphSys.GetY())
-            ySys  = ySys*100
-            # Generate the plot
-            axs[j][i].plot(xSys, ySys, marker = "o", linestyle = "", color = colorListSys[j], 
-                     markerfacecolor = colorListSys[j], markersize = 6, label = labelListSys[j])
-    
+
             graphNameNom = "PtBroad_Zh_" + tarList[i] + "_" + str(j)
             graphNom     = fileNominal.Get(graphNameNom)
             # Extrac the data from the TGraph
             nPointsNom = graphNom.GetN()
             y  = np.ndarray(nPointsNom, dtype = float, buffer = graphNom.GetY())
             ey = np.ndarray(nPointsNom, dtype = float, buffer = graphNom.GetEY())
+
+            ySys = np.absolute((y-ySys)/ySys)*100              
+            # Generate the plot
+            axs[j][i].plot(xSys, ySys, marker = "o", linestyle = "", color = colorListSys[j], 
+                     markerfacecolor = colorListSys[j], markersize = 6, label = labelListSys[j])
+    
             
             NomError = [0,0,0,0,0,0,0,0]
                 

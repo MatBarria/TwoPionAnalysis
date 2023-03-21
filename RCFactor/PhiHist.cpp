@@ -21,16 +21,16 @@ int main(){
 
   std::cout << "PhiPQ C" << std::endl;
   PhiPQ("C");
-  std::cout << "PhiPQ Fe" << std::endl;
-  PhiPQ("Fe");
-  std::cout << "PhiPQ Pb" << std::endl;
-  PhiPQ("Pb");
-  std::cout << "PhiPQ DC" << std::endl;
-  PhiPQ("DC");
-  std::cout << "PhiPQ DFe" << std::endl;
-  PhiPQ("DFe");
-  std::cout << "PhiPQ DPb" << std::endl;
-  PhiPQ("DPb");
+  //std::cout << "PhiPQ Fe" << std::endl;
+  //PhiPQ("Fe");
+  //std::cout << "PhiPQ Pb" << std::endl;
+  //PhiPQ("Pb");
+  //std::cout << "PhiPQ DC" << std::endl;
+  //PhiPQ("DC");
+  //std::cout << "PhiPQ DFe" << std::endl;
+  //PhiPQ("DFe");
+  //std::cout << "PhiPQ DPb" << std::endl;
+  //PhiPQ("DPb");
 
   return 0;
 }
@@ -63,9 +63,9 @@ int PhiPQ(std::string target) {
   //float Masa = 0.938; // Nucleon Mass (Proton)
   int empty;
   int minBins = 4; // Min number of bins no empty bins that the histogram must have
-  TFile* inputFile = new TFile(inputDirectory + "corr_data_Phi.root", "READ");
+  //TFile* inputFile = new TFile(inputDirectory + "corr_data_Phi.root", "READ");
+  TFile* inputFile = new TFile(inputDirectory + "corr_data_Phi_Evnt.root", "READ");
   TFile* binsFile  = new TFile(inputDirectory + Form("Centroid_%s.root", targetArr), "READ");
-  TFile* fileData  = new TFile(fileDataName, "READ");
   TF1 *func = new TF1("fit", 
 		      "[0]+TMath::Cos(x*TMath::Pi()/180)*[1]+TMath::Cos(2*x*TMath::Pi()/180)*[2]");
 
@@ -133,7 +133,6 @@ int PhiPQ(std::string target) {
   }// End number pion event loop
 
   inputFile->Close();
-  fileData->Close();
   t.Print();
   return 0;
 

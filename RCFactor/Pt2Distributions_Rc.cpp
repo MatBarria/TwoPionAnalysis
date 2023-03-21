@@ -8,7 +8,7 @@ int Pt2_Distribution(std::string target, TFile* inputFile, TFile* outputFile);
 
 int main() {
 
-  TFile* inputFile   = new TFile(inputDirectory  + "meanPt2_Zh_Rc.root", "READ");
+  TFile* inputFile   = new TFile(inputDirectory  + "meanPt2_Zh_processed_Rc.root", "READ");
   TFile* outputFile  = new TFile(outputDirectory + "Pt2_Distribution_Rc.root", "RECREATE");
   gROOT->cd();
 
@@ -41,19 +41,31 @@ int Pt2_Distribution(std::string target, TFile* inputFile, TFile* outputFile) {
     // Generate a histogram to save Zh for every number of pion in the final event
     for(int ZhCounter = 0 ; ZhCounter < N_Zh ; ZhCounter++) { // Loops in every Zh bin
       // Generate a histogram for every bin of zh
-      TGraphErrors* Pt2Distribution;
-          // Sum the histograms for every bin of Q2 and Nu
-      TH1F* histPt2 = (TH1F*) inputFile->Get(Form("corr_data_Pt2_%s_%i_%i", targetArr,
-						        ZhCounter, nPion));
+      TH1F* histPt2      = (TH1F*) inputFile->Get(Form("corr_data_Pt2_%s_%i_%i", targetArr, 
+							ZhCounter, nPion));
+      TH1F* histPt2Clean = (TH1F*) inputFile->Get(Form("corr_data_Pt2_%s_%i_%i_clean", targetArr,
+						       ZhCounter, nPion));
+      TH1F* histPt2Inter = (TH1F*) inputFile->Get(Form("corr_data_Pt2_%s_%i_%i_interpolated", 
+						  targetArr, ZhCounter, nPion));
 
-      Pt2Distribution = (TGraphErrors*) TH1TOTGraph(histPt2);
+      TGraphErrors *Pt2Distribution, *Pt2DistributionClean, *Pt2DistributionInter;
+
+      // Transform the histogram into TGraphs
+      Pt2Distribution      = (TGraphErrors*) TH1TOTGraph(histPt2);
+      Pt2DistributionClean = (TGraphErrors*) TH1TOTGraph(histPt2Clean);
+      Pt2DistributionInter = (TGraphErrors*) TH1TOTGraph(histPt2Inter);
       outputFile->cd();
-      histPt2->Write(Form("Pt2_Distribution_Rc_%s_%i_%i-hist", targetArr, ZhCounter, nPion));
-      Pt2Distribution->Write(Form("Pt2_Distribution_Rc_%s_%i_%i", targetArr, ZhCounter, nPion));
+      // Save the TGraphs 
+      Pt2Distribution->Write(Form("Pt2_Distribution_%s_%i_%i", targetArr, ZhCounter, nPion));
+      Pt2DistributionClean->Write(Form("Pt2_Distribution_Clean_%s_%i_%i", targetArr, ZhCounter,
+	      				nPion));
+      Pt2DistributionInter->Write(Form("Pt2_Distribution_Inter_%s_%i_%i", targetArr, ZhCounter, 
+					nPion));
       gROOT->cd();
 
       delete histPt2;
-      delete Pt2Distribution;
+      delete histPt2Clean;
+      delete histPt2Inter;
     } // End Zh loop
   } // End number pion event loop
 

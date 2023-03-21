@@ -4,7 +4,7 @@
 // The code require that you have the number of the event saved in the data tupleName
 // if you don't have it you can check by for the paricle has the same Q2 and Nu instead
 // It can be compiled with
-// g++ -Wall -fPIC -I../include `root-config --cflags` VecSum.cpp -o ../bin/VecSum  `root-config --glibs` ../include/Binning.h
+// g++ -Wall -fPIC -I../include `root-config --cflags` VecSumTOFLow.cpp -o ../bin/VecSum  `root-config --glibs` ../include/Binning.h
 // For the target name use (C,Fe,Pb)
 
 #include <iostream>
@@ -34,7 +34,8 @@ int main(int argc, char* argv[]) {
     char targetArr[n + 1];
     strcpy(targetArr, target.c_str());
 
-    TFile* file = new TFile(Form(dataDirectory + "%s_data_Npion_TOF_Pl25.root", targetArr), "READ");
+    TFile* file = new TFile(Form(dataDirectory + "%s_data_Npion_TOF_Pl25.root", targetArr), 
+                                "READ");
     TNtuple* tuple = (TNtuple*)file->Get("ntuple_data");
 
     int tmpCounter = 0; // Counts how many particles there is in the event
@@ -57,7 +58,6 @@ int main(int argc, char* argv[]) {
     tuple->SetBranchAddress("YC",&YCEvnt);
     tuple->SetBranchAddress("VC_TM",&VCEvnt);
     tuple->SetBranchAddress("deltaZ",&DZEvnt);
-    tuple->SetBranchAddress("NEvnt",&evnt);
 
     gROOT->cd();
 
@@ -88,7 +88,7 @@ int main(int argc, char* argv[]) {
         tmpQ2 = Q2Evnt;
         tmpNu = NuEvnt;
         tuple->GetEntry(i + 1);
-        while(tmpQ2 == Q2Evnt && tmpNu = NuEvnt) { // Check all the paricles in the event
+        while(tmpQ2 == Q2Evnt && tmpNu == NuEvnt) { // Check all the paricles in the event
             tmpCounter++;
             if(TMath::Abs(DZEvnt) < deltaZcut) {
                 tmpZh[pionCounter]  = ZhEvnt;

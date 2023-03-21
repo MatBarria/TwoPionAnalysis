@@ -56,7 +56,7 @@ void GetCleanPt2Distribution(TH1F* hist, double cutoff) {
             break;
         }
     }
-    // Set in 0 all the bins after the cut off
+
     for(int binCounter = cutoffBin; binCounter <= hist->GetNbinsX(); binCounter++){
         hist->SetBinContent(binCounter, 0.);
         hist->SetBinError(binCounter,   0.);
@@ -163,8 +163,8 @@ void fitAndCutoff(std::string target, TFile* inputFile, TFile* outputFile) {
 
             for(int i = 0 ; i < N_FITS ; i++) {
 
-                MinFitRange = i*Delta_PT2;
-                MaxFitRange = Pt2_BINS[N_Pt2];
+                MinFitRange = i*Delta_Pt2;
+                MaxFitRange = Pt2_MAX;
 
                 TF1* FFit = new TF1("FFit", "[0]*TMath::Exp(-x/[1])", MinFitRange, MaxFitRange);
                 FFit->SetParameter(0, histCutoff->GetBinContent(1));
