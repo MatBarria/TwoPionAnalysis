@@ -1,102 +1,106 @@
-// g++ -Wall -fPIC -I../include `root-config --cflags` RcHist.cpp -o ../bin/RcHist  `root-config --glibs` ../include/Integration.h
+// g++ -Wall -fPIC -I./include `root-config --cflags` RcTuple.cpp -o ./bin/RcTuple `root-config --glibs` ./include/Binning_Rc.h
 
-#include "Integration.h"
+#include "Binning_Rc.h"
+#include <iostream>
+#include "TH1F.h"
+#include "TFile.h"
+#include "TString.h"
+#include "TROOT.h"
 #include "TNtuple.h"
 
-
-int RcHist(std::string target, TFile* inputFile, TFile* outputFile);
+int RcTuple(std::string target, TFile* fileRc, TFile* fileRcCorr ,TFile* fileOutput);
+const char* VarList = "Q2:Nu:Zh:Pt2:PhiPQ:Rc:RcInter";
 
 int main() {
 
-  TStopwatch t;
+    TFile *fileRc= new TFile(inputDirectory + "RcFactors.root", "READ");
+    TFile *fileRcCorr = new TFile(inputDirectory + "RcFactorsInter.root", "READ");
+    TFile* fileOutput = new TFile(outputDirectory + "RcTuple.root", "RECREATE");
 
-  TFile* inputFile   = new TFile(inputDirectory  + "RcFactors.root", "READ");
-  TFile* outputFile  = new TFile(outputDirectory + "RcTuples.root", "RECREATE");
-  gROOT->cd();
+    std::cout << "Rc Tuple for C" << std::endl;
+    RcTuple("C", fileRc, fileRcCorr, fileOutput);
+    std::cout << "Rc Tuple for Fe" << std::endl;
+    RcTuple("Fe", fileRc, fileRcCorr, fileOutput);
+    std::cout << "Rc Tuple for Pb" << std::endl;
+    RcTuple("Pb", fileRc, fileRcCorr, fileOutput);
+    std::cout << "Rc Tuple for DC" << std::endl;
+    RcTuple("DC", fileRc, fileRcCorr, fileOutput);
+    std::cout << "Rc Tuple for DFe" << std::endl;
+    RcTuple("DFe", fileRc, fileRcCorr, fileOutput);
+    std::cout << "Rc Tuple for DPb" << std::endl;
+    RcTuple("DPb", fileRc, fileRcCorr, fileOutput);
 
-  // std::cout << "Start5" << std::endl;
-  RcHist("C",   inputFile, outputFile);
-  std::cout << "C target is Done!" << std::endl;
-  RcHist("Fe",  inputFile, outputFile);
-  std::cout << "Fe target is Done!" << std::endl;
-  RcHist("Pb",  inputFile, outputFile);
-  std::cout << "Pb target is Done!" << std::endl;
-  RcHist("DC",  inputFile, outputFile);
-  std::cout << "DC target is Done!" << std::endl;
-  RcHist("DFe", inputFile, outputFile);
-  std::cout << "DFe target is Done!" << std::endl;
-  RcHist("DPb", inputFile, outputFile);
-  std::cout << "DPb target is Done!" << std::endl;
+    fileRcCorr->Close();
+    fileOutput->Close();
 
-  inputFile->Close();
-  outputFile->Close();
-
-  t.Print();
-
+    return 0;
 }
 
-int RcHist(std::string target, TFile* inputFile, TFile* outputFile) {
 
-  std::cout << "Start" << std::endl;
-  int n = target.length();
-  char targetArr[n + 1];
-  strcpy(targetArr, target.c_str());
-
-  TNtuple* RcTuple[N_Zh][N_PION];
-  for(int i = 0; i < N_Zh; i++) {
-    for(int j = 0; j < N_PION; j++) {
-      RcTuple[i][j] = new TNtuple(Form("RcTuple_%s_%i_%i", targetArr, i, j+1), "", "Rc");
+int RcTuple(std::string target, TFile* fileRc, TFile* fileRcCorr ,TFile* fileOutput) {
+    
+    Pt2_BINS[0] = 0.;
+    Phi_BINS[0] = -180;
+    for(int i = 1; i <= N_Pt2; i++) {
+        Pt2_BINS[i] = Pt2_BINS[i-1] + Delta_Pt2;
     }
-  }
-  float Q2, Nu, Xb, Zh, Pt;
-  float *vars = new float[1];
-  float Masa = 0.938; // Mass Nucleon (Proton)
-
-  for(int nPion = 1; nPion <= N_PION ; nPion++) { // Loops in every number of generated pions
-    for(int Q2Counter = 0; Q2Counter < N_Q2; Q2Counter++) { // Loops in every Q2 bin
-      for(int NuCounter = 0; NuCounter < N_Nu; NuCounter++) { // Loops in every Nu bin
-        for(int ZhCounter = 0; ZhCounter < N_Zh; ZhCounter++) { // Loops in every Zh bin
-          for(int Pt2Counter = 0; Pt2Counter < N_Pt2; Pt2Counter++) { // Loops in every Pt2 bin
-
-            Q2  = (Q2_BINS[Q2Counter] + Q2_BINS[Q2Counter+1])/2;
-            Nu  = (Nu_BINS[NuCounter] + Nu_BINS[NuCounter+1])/2;
-            Xb  = Q2/(2*Masa*Nu);
-            Zh  = (Zh_BINS[ZhCounter] + Zh_BINS[ZhCounter+1])/2;
-            Pt  = (TMath::Sqrt(Pt2_BINS[Pt2Counter]) + TMath::Sqrt(Pt2_BINS[Pt2Counter+1]))/2;
-
-            TH1F* histRcFactors = (TH1F*) inputFile->Get(Form("RcFactor_%s_%.3f%.3f%.3f%.3f_%i", 
-								targetArr, Q2, Xb, Zh, Pt, nPion));
-
-            if(histRcFactors == NULL)         { continue; }
-	    if(EmptyHist(histRcFactors) == 1) { continue; }
-
-            for(int PhiCounter = 0; PhiCounter < N_Phi; PhiCounter++) {
-              vars[0] = (float)histRcFactors->GetBinContent(PhiCounter+1);
-              if(vars[0] != 0) {
-                RcTuple[ZhCounter][nPion-1]->Fill(vars);
-              }
-            }
-            delete histRcFactors;
-
-          } // End Pt2 loop
-        } // End Zh loop
-      } // End Nu loop
-    } // End Q2 loop
-  } // End pion number loop
-  outputFile->cd();
-  for(int i = 0; i < N_Zh; i++) {
-    for(int j = 0; j < N_PION; j++) {
-      RcTuple[i][j]->Write();
+    for(int i = 1; i <= N_Phi; i++) {
+        Phi_BINS[i] = Phi_BINS[i-1] + Delta_Phi;
     }
-  }
-  gROOT->cd();
 
-  for(int i = 0; i < N_Zh; i++) {
-    for(int j = 0; j < N_PION; j++) {
-      delete RcTuple[i][j];
-    }
-  }
+    std::cout << "Start" << std::endl;
+    int n = target.length();
+    char targetArr[n + 1];
+    strcpy(targetArr, target.c_str());	
 
-  return 0;
+    float Rc, RcInter;
+
+    gROOT->cd();
+    for(int nPion = 1; nPion <= N_PION ; nPion++) { // Loops in every number of generated pions
+
+    TNtuple* ntupleSave = new TNtuple(Form("ntuple_%s_%i", targetArr, nPion), "", VarList);
+
+        for(int Q2Counter = 0; Q2Counter < N_Q2; Q2Counter++) { // Loops in every Q2 bin
+            for(int NuCounter = 0; NuCounter < N_Nu; NuCounter++) { // Loops in every Nu bin
+                for(int ZhCounter = 0; ZhCounter < N_Zh; ZhCounter++) { // Loops in every Zh bin
+                    for(int Pt2Counter = 0; Pt2Counter < N_Pt2; Pt2Counter++) { 
+                        
+                        TH1F *PhiHistRc, *PhiHistRcInter; 
+                        PhiHistRc = (TH1F*) fileRc->Get(
+                                Form("RcFactor_%s_%i%i%i%i_%i",
+                                targetArr, Q2Counter, NuCounter, ZhCounter, Pt2Counter, nPion)); 
+                        PhiHistRcInter = (TH1F*) fileRcCorr->Get(
+                                Form("RcFactor_%s_%i%i%i%i_%i", 
+                                targetArr, Q2Counter, NuCounter, ZhCounter, Pt2Counter, nPion)); 
+                        if(PhiHistRc == NULL || PhiHistRcInter == NULL) { 
+                            delete PhiHistRc;
+                            delete PhiHistRcInter;
+                            continue; 
+                        }
+
+                        for(int PhiCounter = 0; PhiCounter < N_Phi; PhiCounter++) {
+                            Rc = PhiHistRc->GetBinContent(PhiCounter+1); 
+                            RcInter = PhiHistRcInter->GetBinContent(PhiCounter+1); 
+                            ntupleSave->Fill(Q2Counter, NuCounter, ZhCounter, Pt2Counter, 
+                                    PhiCounter, Rc, RcInter);
+
+                        } // End Phi loop
+                        delete PhiHistRc;
+                        delete PhiHistRcInter;
+                    } // End Phi loop
+                } // End Phi loop
+            } // End Phi loop
+        } // End Phi loop
+                
+
+
+    fileOutput->cd();
+    ntupleSave->Write();
+    gROOT->cd();
+    delete ntupleSave;
+
+    } // End number of pions loop
+
+    return 0;
 
 }

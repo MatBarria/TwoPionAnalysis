@@ -1,8 +1,8 @@
 #include "TString.h"
 //const TString inputDirectory  = "/home/matias/proyecto/TwoPionAnalysis/Data/Nominal/";
 //const TString outputDirectory = "/home/matias/proyecto/TwoPionAnalysis/Data/Nominal/";
-const TString inputDirectory  = "/home/matias/proyecto/TwoPionAnalysis/Data/BinsEvent/70/";
-const TString outputDirectory = "/home/matias/proyecto/TwoPionAnalysis/Data/BinsEvent/70/";
+const TString inputDirectory  = "/home/matias/proyecto/TwoPionAnalysis/Data/Bins/60/";
+const TString outputDirectory = "/home/matias/proyecto/TwoPionAnalysis/Data/Bins/60/";
 const TString dataDirectory  = "/home/matias/proyecto/Pt2Broadening_multi-pion/Data/";
 
 const int UseCutOff = 1; // Select 1 Use the Cutoff and the interpolation
@@ -20,13 +20,12 @@ const int ZH_SUM = 1;
 
 //const int N_Pt2 = 110
 //#define N_Pt2 90
-#define N_Pt2 70
+#define N_Pt2 60
+float Pt2_BINS[N_Pt2+1];
+#define N_Phi 7
+float Phi_BINS[N_Phi+1];
 
-//#define N_Phi 6
-//#define N_Phi 12
-#define N_Phi 9
-
-const float Delta_PT2 = 3.0/N_Pt2;
+const float Delta_Pt2 = 3.0/N_Pt2;
 const float Delta_Phi = 360.0/N_Phi;
 
 // Number of solids targets and max number of pion
@@ -53,7 +52,8 @@ const float Nu_BINS[N_Nu+1] = {2.2, 3.36, 3.82, 4.26};
 const float Zh_BINS[N_Zh+1] = {0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6 , 0.8 , 1.0};
 //const float Phi_BINS[N_Phi+1] = {-180, -120, -60, 0, 60, 120, 180};
 //const float Phi_BINS[N_Phi+1] = {-180, -150, -120, -90, -60, -30, 0, 30, 60, 90, 120, 150, 180};
-const float Phi_BINS[N_Phi+1] = {-180, -140, -100, -60, -20, 20, 60, 100, 140, 180};
+//const float Phi_BINS[N_Phi+1] = {-180, -140, -100, -60, -20, 20, 60, 100, 140, 180};
+//const float Phi_BINS[N_Phi+1] = {-180, -140, -100, -60, -20, 20, 60, 100, 140, 180};
 
 // 90 bins Pt2
 //const float Pt2_BINS[N_Pt2+1] = {0, 0.0333333, 0.0666667, 0.1, 0.133333, 0.166667, 0.2, 0.233333,
@@ -70,17 +70,17 @@ const float Phi_BINS[N_Phi+1] = {-180, -140, -100, -60, -20, 20, 60, 100, 140, 1
 				 //2.93333, 2.96667, 3};
 
 // 70 bins Pt2
-const float Pt2_BINS[N_Pt2+1] = {0, 0.0428571, 0.0857143, 0.128571, 0.171429, 0.214286, 
-                                0.257143, 0.3, 0.342857, 0.385714, 0.428571, 0.471429, 0.514286, 
-                                0.557143, 0.6, 0.642857, 0.685714, 0.728571, 0.771429, 0.814286,
-                                0.857143, 0.9, 0.942857, 0.985714, 1.02857, 1.07143, 1.11429, 
-                                1.15714, 1.2, 1.24286, 1.28571, 1.32857, 1.37143, 1.41429,
-                                1.45714, 1.5, 1.54286, 1.58571, 1.62857, 1.67143, 1.71429, 
-                                1.75714, 1.8, 1.84286, 1.88571, 1.92857, 1.97143, 2.01429,
-                                2.05714, 2.1, 2.14286, 2.18571, 2.22857, 2.27143, 2.31429, 
-                                2.35714, 2.4, 2.44286, 2.48571, 2.52857, 2.57143, 2.61429, 
-                                2.65714, 2.7, 2.74286, 2.78571, 2.82857, 2.87143, 2.91429, 
-                                2.95714, 3};
+//const float Pt2_BINS[N_Pt2+1] = {0, 0.0428571, 0.0857143, 0.128571, 0.171429, 0.214286, 
+                                //0.257143, 0.3, 0.342857, 0.385714, 0.428571, 0.471429, 0.514286, 
+                                //0.557143, 0.6, 0.642857, 0.685714, 0.728571, 0.771429, 0.814286,
+                                //0.857143, 0.9, 0.942857, 0.985714, 1.02857, 1.07143, 1.11429, 
+                                //1.15714, 1.2, 1.24286, 1.28571, 1.32857, 1.37143, 1.41429,
+                                //1.45714, 1.5, 1.54286, 1.58571, 1.62857, 1.67143, 1.71429, 
+                                //1.75714, 1.8, 1.84286, 1.88571, 1.92857, 1.97143, 2.01429,
+                                //2.05714, 2.1, 2.14286, 2.18571, 2.22857, 2.27143, 2.31429, 
+                                //2.35714, 2.4, 2.44286, 2.48571, 2.52857, 2.57143, 2.61429, 
+                                //2.65714, 2.7, 2.74286, 2.78571, 2.82857, 2.87143, 2.91429, 
+                                //2.95714, 3};
 
 
 char DC[3] = {'D', 'C', '\0' }; char DFe[4] = {'D', 'F', 'e', '\0'};

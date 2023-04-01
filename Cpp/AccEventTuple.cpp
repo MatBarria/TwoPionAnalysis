@@ -41,7 +41,7 @@ int AccEvnt(std::string target) {
         std::cout << "Phi Bin " << i << ": " << Phi_BINS_Corr[i] << std::endl;
     }
 
-    std::cout << "Start" << std::endl;
+    std::cout << "Starto" << std::endl;
     int n = target.length();
     char targetArr[n + 1];
     strcpy(targetArr, target.c_str());	
@@ -59,6 +59,7 @@ int AccEvnt(std::string target) {
     gROOT->cd();
     for(int nPion = 1; nPion <= N_PION ; nPion++) { // Loops in every number of generated pions
 
+    std::cout << "Starto" << std::endl;
         TNtuple* ntupleData  = (TNtuple*) fileData->Get(Form("ntuple_%i_pion", nPion));
 
         ntupleData->SetBranchAddress("Q2",&vars[0]);

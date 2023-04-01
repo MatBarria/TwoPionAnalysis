@@ -29,6 +29,7 @@ dic_label_sys = { "DZLow"   : "$\Delta Z < 2.5$ cm",
                   "TOFHigh" : "TOF Cut P < 2.9 GeV", 
                   "NAccept0": "N Accept $\geq$ 0",
                   "NAccept2": "N Accept $\geq$ 2",
+                  "NAcceptRec": "N Accept Rec $\geq$ 2",
                  }
 
 dicPlotName = {   "DZLow"   : "DZ_Cut",
@@ -43,6 +44,7 @@ dicPlotName = {   "DZLow"   : "DZ_Cut",
                   "TOFLow"  : "TOF_Cut", 
                   "NAccept0": "N_Accept",
                   "NAccept2": "N_Accept",
+                  "NAcceptRec": "N_Accept",
                  }
 
 tarList      = ["C", "Fe", "Pb"]
@@ -62,11 +64,16 @@ def SystematicError(systematic):
                         hspace = 0.3)
 
     # fileSystematic = ROOT.TFile.Open(inputDirectory + "Percentaje.root", "READ")
-    fileSystematic = [ROOT.TFile.Open(systematicDirectory + systematic[0] + "/Pt_broad_Zh.root", 
+    # fileSystematic = [ROOT.TFile.Open(systematicDirectory + systematic[0] + "/Pt_broad_Zh.root", 
+                                     # "READ"),
+                      # ROOT.TFile.Open(systematicDirectory + systematic[1] + "/Pt_broad_Zh.root", 
+                                      # "READ")]
+    fileSystematic = [ROOT.TFile.Open(inputDirectory + "/Pt_broad_Zh.root", 
                                      "READ"),
                       ROOT.TFile.Open(systematicDirectory + systematic[1] + "/Pt_broad_Zh.root", 
                                       "READ")]
-    fileNominal    = ROOT.TFile.Open(inputDirectory + "Pt_broad_Zh.root", "READ")
+    # fileNominal    = ROOT.TFile.Open(inputDirectory + "Pt_broad_Zh.root", "READ")
+    fileNominal    = ROOT.TFile.Open(systematicDirectory + "NAccept0/Pt_broad_Zh.root", "READ")
 
 
     for i in range(3): # Loops on the diffrent targets
@@ -155,9 +162,10 @@ def SystematicError(systematic):
           ".pdf Has been created")
 
 
-SystematicError(["Normal", "Cutoff"])
-SystematicError(["70Bins", "110Bins"])
-SystematicError(["DZLow",  "DZHigh"])
-SystematicError(["VC_RD",  "VC_HH"])
-SystematicError(["TOFLow", "TOFHigh"])
-SystematicError(["NAccept0", "NAccept2"])
+# SystematicError(["Normal", "Cutoff"])
+# SystematicError(["70Bins", "110Bins"])
+# SystematicError(["DZLow",  "DZHigh"])
+# SystematicError(["VC_RD",  "VC_HH"])
+# SystematicError(["TOFLow", "TOFHigh"])
+# SystematicError(["NAccept0", "NAccept2"])
+SystematicError(["NAccept0", "NAcceptRec"])

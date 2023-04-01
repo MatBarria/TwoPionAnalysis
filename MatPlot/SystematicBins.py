@@ -30,8 +30,8 @@ colorListNom = ["red", "Blue", "black"]
 markerList   = ["^", "v", "o", "s", "D"]
 labelListNom = ["Sta. Error One $\pi +$", "Sta. Error Two $\pi+$", "Sta. Error Three $\pi +$"]
 
-binDirectory = "/home/matias/proyecto/TwoPionAnalysis/Data/BinsEvent/"
-plotDir = "/home/matias/proyecto/TwoPionAnalysis/Plots/BinsEvent/" 
+binDirectory = "/home/matias/proyecto/TwoPionAnalysis/Data/Bins/"
+plotDir = "/home/matias/proyecto/TwoPionAnalysis/Plots/Bins/" 
 ZhYlimit   = 0.09
 
 def SystematicError(systematic):
@@ -47,13 +47,13 @@ def SystematicError(systematic):
     # fileSystematic = ROOT.TFile.Open(inputDirectory + "Percentaje.root", "READ")
     fileSystematic = [ROOT.TFile.Open(binDirectory + "50" + "/Pt_broad_Zh.root", 
                                      "READ"),
-                      ROOT.TFile.Open(binDirectory + "60" + "/Pt_broad_Zh.root", 
+                      ROOT.TFile.Open(binDirectory + "70" + "/Pt_broad_Zh.root", 
                                       "READ"),
                       ROOT.TFile.Open(binDirectory + "80"+ "/Pt_broad_Zh.root", 
                                       "READ"),
                       ROOT.TFile.Open(binDirectory + "90" + "/Pt_broad_Zh.root", 
                                       "READ")]
-    fileNominal    = ROOT.TFile.Open(binDirectory + "70" + "/Pt_broad_Zh.root", "READ")
+    fileNominal    = ROOT.TFile.Open(binDirectory + "60" + "/Pt_broad_Zh.root", "READ")
 
 
     for i in range(3): # Loops on the diffrent targets
@@ -64,7 +64,7 @@ def SystematicError(systematic):
             graphNameNom = "PtBroad_Zh_" + tarList[i] + "_" + str(j)
             graphNom     = fileNominal.Get(graphNameNom)
 
-            for s in range(4):
+            for s in range(3):
 
                 graphNameSys = "PtBroad_Zh_" + tarList[i] + "_" + str(j)
                 graphSys     = fileSystematic[s].Get(graphNameSys)
@@ -212,5 +212,5 @@ def PtBroadZhTarSplit():
                 bbox_inches = 'tight')
     print( "PtBroad_Zh_Target-Grid.pdf Has been created")
 
-SystematicError(["50", "60", "80", "90"])
+SystematicError(["50", "70", "80", "90"])
 PtBroadZhTarSplit()

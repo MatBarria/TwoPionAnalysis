@@ -19,6 +19,14 @@ int PhiPQ(std::string target);
 
 int main(){
 
+  Pt2_BINS[0] = 0.;
+  Phi_BINS[0] = -180;
+  for(int i = 1; i <= N_Pt2; i++) {
+      Pt2_BINS[i] = Pt2_BINS[i-1] + Delta_Pt2;
+  }
+  for(int i = 1; i <= N_Phi; i++) {
+      Phi_BINS[i] = Phi_BINS[i-1] + Delta_Phi;
+  }
   std::cout << "PhiPQ C" << std::endl;
   PhiPQ("C");
   //std::cout << "PhiPQ Fe" << std::endl;
@@ -63,8 +71,8 @@ int PhiPQ(std::string target) {
   //float Masa = 0.938; // Nucleon Mass (Proton)
   int empty;
   int minBins = 4; // Min number of bins no empty bins that the histogram must have
-  //TFile* inputFile = new TFile(inputDirectory + "corr_data_Phi.root", "READ");
-  TFile* inputFile = new TFile(inputDirectory + "corr_data_Phi_Evnt.root", "READ");
+  TFile* inputFile = new TFile(inputDirectory + "corr_data_Phi.root", "READ");
+  //TFile* inputFile = new TFile(inputDirectory + "corr_data_Phi_Evnt.root", "READ");
   TFile* binsFile  = new TFile(inputDirectory + Form("Centroid_%s.root", targetArr), "READ");
   TF1 *func = new TF1("fit", 
 		      "[0]+TMath::Cos(x*TMath::Pi()/180)*[1]+TMath::Cos(2*x*TMath::Pi()/180)*[2]");

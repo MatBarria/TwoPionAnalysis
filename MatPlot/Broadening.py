@@ -52,11 +52,7 @@ def PtBroadZhTarSplit():
 
     file = ROOT.TFile.Open(inputDirectory + "Pt_broad_Zh.root", "READ")
 
-    tarList   = ["C", "Fe", "Pb"]
-    colorList = ["red", "Blue", "black"]
     labelList = ["One $\pi +$", "Two $\pi+$", "Three $\pi +$"]
-
-
     for i in range(3): # Loops on the diffrent targets
         # AddCLasPleliminary(axs[i])
         axs[i].set_ylim(0, ZhYlimit)
@@ -71,16 +67,17 @@ def PtBroadZhTarSplit():
             y  = np.ndarray(nPoints, dtype = float, buffer = graph.GetY())
             ey = np.ndarray(nPoints, dtype = float, buffer = graph.GetEY())
             # Generae the plot
-            print("broadening:")
-            print(y)
-            print("error")
-            print(ey)
+            # print("broadening:")
+            # print(y)
+            # print("error")
+            # print(ey)
             axs[i].errorbar(x, y, ey, marker = "o", linestyle = "",
                             markerfacecolor = colorList[j], color = colorList[j], 
-                            markersize = 6, label = labelList[j])
-            # container = axs[i].errorbar(x, y, ey + systematicDiccionary[tarList[i]][j], 
-                            # marker = "", linestyle = "", markerfacecolor = colorList[j], lw = 0,
-                            # color = colorList[j], markersize = 0, capsize = 5)
+                            markersize = 5, label = labelList[j])
+            container = axs[i].errorbar(x, y, np.sqrt(ey*ey + 
+                    systematicDiccionary[tarList[i]][j]*systematicDiccionary[tarList[i]][j]),
+                    marker = "", linestyle = "", markerfacecolor = colorList[j], lw = 0,
+                                        color = colorList[j], markersize = 0, capsize = 5)
 
     # Set the labels for the three plots
     axs[0].set_ylabel(r'$\Delta P_\mathrm{T}^{2} [GeV^{2}]$', loc = "center", 
@@ -226,6 +223,7 @@ def CalculateTotalSystematic(systematics, sysErrorArray, i, j):
     graphNom    = fileNominal.Get(graphName)
     nPoints = graphNom.GetN()
     nomValues  = np.ndarray(nPoints, dtype = float, buffer = graphNom.GetY())
+    errorValues  = np.ndarray(nPoints, dtype = float, buffer = graphNom.GetEY())
     fileNominal.Close()
  
     for systematic in systematics:
@@ -237,37 +235,61 @@ def CalculateTotalSystematic(systematics, sysErrorArray, i, j):
                         fileSystematic[1].Get(graphName)]
         SysValues = [np.ndarray(nPoints, dtype = float, buffer = graphSys[0].GetY()),
                      np.ndarray(nPoints, dtype = float, buffer = graphSys[1].GetY())]
-        
-        print(nomValues-SysValues)
+        # print(tarList[i] + "_" + str(j) + systematic[0] + "-" + systematic[1]) 
+        # print("Valor nominal: ")
+        # print(nomValues)
+        # print("Error nominal: ")
+        # print(errorValues)
+        # print("Valor Systematico 1")
+        # print(SysValues[0])
+        # print("Valor Systematico 2")
+        # print(SysValues[1])
+        # print("Resta 1")
+        # print(nomValues - SysValues[0])
+        # print("Resta 2")
+        # print(nomValues - SysValues[1])
+        # print("Division")
+        # print((nomValues - SysValues[1])/SysValues[1])
         sysErrorArray += np.square(np.maximum(np.absolute(nomValues-SysValues[0]), 
-                                              np.absolute(nomValues-SysValues[1]))/3**.5)
+                                              np.absolute(nomValues-SysValues[1])))/(3**.5)
+        # print("SysErrorArray before sqrt: ")
+        # print(sysErrorArray)
         fileSystematic[0].Close()
         fileSystematic[1].Close()
     
     sysErrorArray = np.sqrt(sysErrorArray)
+    # print("SysErrorArray after sqrt: ")
+    # print(sysErrorArray)
+    return(sysErrorArray)
 
 
 systematicDiccionary = { "C"  : [np.repeat(0., 8), np.repeat(0., 8)],
                          "Fe" : [np.repeat(0., 8), np.repeat(0., 8)],
                          "Pb" : [np.repeat(0., 8), np.repeat(0., 8)],
                        }
+# print(systematicDiccionary)
 
-systematics = [["Normal", "Cutoff"], ["70Bins", "110Bins"], ["DZLow",  "DZHigh"],
-               ["VC_RD",  "VC_HH"], ["TOFLow", "TOFHigh"], ["NAccept0", "NAccept2"]] 
+# systematics = [["Normal", "Cutoff"], ["70Bins", "110Bins"], ["DZLow",  "DZHigh"],
+               # ["VC_RD",  "VC_HH"], ["TOFLow", "TOFHigh"]]
                
+systematics = [["NAccept0", "NAccept2"]] 
 
 
 def CallCalculateTotalSystemtic(systematicDiccionary):
 
     for i in range(3): # Loops on the diffrent targets
         for j in range(nPion): # Loops on the number of pions
-            CalculateTotalSystematic(systematics, systematicDiccionary[tarList[i]][j], i, j)
+            systematicDiccionary[tarList[i]][j] = CalculateTotalSystematic(systematics,
+                                                systematicDiccionary[tarList[i]][j], i, j)
             # print(systematicDiccionary[tarList[i]][j])
 
 
 
-# CallCalculateTotalSystemtic(systematicDiccionary)
+CallCalculateTotalSystemtic(systematicDiccionary)
 # print(systematicDiccionary)
+# print(systematicDiccionary)
+# print("ultimo: ")
+# print(systematicDiccionary[tarList[2]][1], 2, 1)
 
 # Call funtions
 PtBroadZhTarSplit()

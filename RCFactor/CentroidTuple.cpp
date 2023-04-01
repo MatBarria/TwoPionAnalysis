@@ -19,18 +19,27 @@ int PhiPQ(std::string target);
 
 int main(){
 
+    Pt2_BINS[0] = 0.;
+    Phi_BINS[0] = -180;
+    for(int i = 1; i <= N_Pt2; i++) {
+        Pt2_BINS[i] = Pt2_BINS[i-1] + Delta_Pt2;
+    }
+    for(int i = 1; i <= N_Phi; i++) {
+        Phi_BINS[i] = Phi_BINS[i-1] + Delta_Phi;
+    }
+
     std::cout << "PhiPQ C" << std::endl;
     PhiPQ("C");
-    //std::cout << "PhiPQ Fe" << std::endl;
-    //PhiPQ("Fe");
-    //std::cout << "PhiPQ Pb" << std::endl;
-    //PhiPQ("Pb");
-    //std::cout << "PhiPQ DC" << std::endl;
-    //PhiPQ("DC");
-    //std::cout << "PhiPQ DFe" << std::endl;
-    //PhiPQ("DFe");
-    //std::cout << "PhiPQ DPb" << std::endl;
-    //PhiPQ("DPb");
+    std::cout << "PhiPQ Fe" << std::endl;
+    PhiPQ("Fe");
+    std::cout << "PhiPQ Pb" << std::endl;
+    PhiPQ("Pb");
+    std::cout << "PhiPQ DC" << std::endl;
+    PhiPQ("DC");
+    std::cout << "PhiPQ DFe" << std::endl;
+    PhiPQ("DFe");
+    std::cout << "PhiPQ DPb" << std::endl;
+    PhiPQ("DPb");
 
     return 0;
 }

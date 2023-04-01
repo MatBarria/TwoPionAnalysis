@@ -151,8 +151,8 @@ void ZhIntegration(TFile* inputFile, TFile* outputFile, const char* target) {
 
 void CallPhiIntegration(TString inputDirectory, TString outputDirectory) {
 
-    //TFile* inputFile  = new TFile(inputDirectory  + "corr_data_Phi.root", "READ");
-    TFile* inputFile  = new TFile(inputDirectory  + "corr_data_Phi_Evnt.root", "READ");
+    TFile* inputFile  = new TFile(inputDirectory  + "corr_data_Phi.root", "READ");
+    //TFile* inputFile  = new TFile(inputDirectory  + "corr_data_Phi_Evnt.root", "READ");
     TFile* outputFile = new TFile(outputDirectory + "corr_data_Pt2.root", "RECREATE");
     gROOT->cd();
 

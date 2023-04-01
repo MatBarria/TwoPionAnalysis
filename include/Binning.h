@@ -1,13 +1,14 @@
 #include "TString.h"
 
 const TString dataDirectory  = "/home/matias/proyecto/Pt2Broadening_multi-pion/Data/";
-const TString inputDirectory  = "/home/matias/proyecto/TwoPionAnalysis/Data/BinsEvent/70/";
-const TString outputDirectory = "/home/matias/proyecto/TwoPionAnalysis/Data/BinsEvent/70/";
-const int N_Pt2_Corr = 70;
-const int N_Pt2 = 70;
+const TString inputDirectory  = "/home/matias/proyecto/TwoPionAnalysis/Data/60Systematic/NAcceptRec/";
+const TString outputDirectory = "/home/matias/proyecto/TwoPionAnalysis/Data/60Systematic/NAcceptRec/";
+const int N_Pt2_Corr = 60;
+const int N_Pt2 = 60;
 const int N_Phi_Corr = 6;
-const int N_Phi = 9;
+const int N_Phi = 6;
 float Pt2_BINS[N_Pt2+1];
+float Phi_BINS[N_Phi+1];
 //const TString inputDirectory  = "/home/matias/proyecto/TwoPionAnalysis/Data/Systematic/NAccept0/";
 //const TString outputDirectory = "/home/matias/proyecto/TwoPionAnalysis/Data/Systematic/NAccept0/";
 //const TString inputDirectory  = "/home/matias/proyecto/TwoPionAnalysis/Data/ME/";
