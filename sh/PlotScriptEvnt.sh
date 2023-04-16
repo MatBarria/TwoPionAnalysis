@@ -11,10 +11,10 @@ g++ -Wall -fPIC -I../include `root-config --cflags` AccEventTuple.cpp -o ../bin/
 
 cd ../bin
 
-./AccEventTuple
+#./AccEventTuple
 ./ApplyACFactors
-./Integration
-./Broadening
+#./Integration
+#./Broadening
 
 cd ../MatPlot
 

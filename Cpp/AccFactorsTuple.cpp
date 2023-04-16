@@ -61,7 +61,7 @@ int AccTuple(std::string target, TFile* fileDataCorr ,TFile* fileOutput) {
 
         for(int Q2Counter = 0; Q2Counter < N_Q2; Q2Counter++) { // Loops in every Q2 bin
             for(int NuCounter = 0; NuCounter < N_Nu; NuCounter++) { // Loops in every Nu bin
-                for(int ZhCounter = 0; ZhCounter < N_Zh; ZhCounter++) { // Loops in every Zh bin
+                for(int ZhCounter = ZH_SUM; ZhCounter < N_Zh-1; ZhCounter++) { // Loops in every Zh bin
                     for(int Pt2Counter = 0; Pt2Counter < N_Pt2; Pt2Counter++) { 
                         
                         TH1F *PhiHistAccFac, *PhiHistAccFalPos; 

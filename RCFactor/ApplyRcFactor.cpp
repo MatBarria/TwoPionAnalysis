@@ -7,7 +7,8 @@ int ApplyRC(std::string target, TFile* fileData, TFile* fileRcFactors, TFile* fi
 
 int main() {
 
-    TFile* fileData      = new TFile(inputDirectory  + "corr_data_Phi.root"    , "READ");
+    TFile* fileData      = new TFile(inputDirectory  + "corr_data_Phi_Evnt.root"    , "READ");
+    //TFile* fileRcFactors = new TFile(inputDirectory  + "RcFactorsInterEmpty.root"   , "READ");
     TFile* fileRcFactors = new TFile(inputDirectory  + "RcFactorsInter.root"   , "READ");
     //TFile* fileRcFactors = new TFile(inputDirectory  + "RcFactors.root"   , "READ");
     TFile* fileOutput    = new TFile(outputDirectory + "corr_data_Phi_Rc.root" , "RECREATE");

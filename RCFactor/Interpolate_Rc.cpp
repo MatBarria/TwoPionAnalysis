@@ -40,10 +40,10 @@ int InterpolationRc(std::string target, TFile* fileRc, TFile* fileRcInter) {
     int interCounter = 0;
     float Rc, RcNei, RcNext, RcPrev, RcDiff;
 
-    float RcMin = 0.7;
-    float RcMax = 1.4;
-    int MaxPt  = 30;
-    float MaxDiff = 0.15;
+    float RcMin = 0.75;
+    float RcMax = 1.25;
+    int MaxPt  = 26;
+    float MaxDiff = 0.1;
 
     TH1F* histSafe  = new TH1F("RcFactors", "", N_Phi, -180, 180);
     for(int nPion = 1; nPion <= N_PION; nPion++) { // Loops number of pions

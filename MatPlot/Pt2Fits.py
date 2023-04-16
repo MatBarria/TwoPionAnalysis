@@ -75,7 +75,7 @@ def Pt2FittedFunction(target, ZhBin, NPion, fitNum, nameNumber):
 
 
 Pt2FittedFunction('C', 5, 1, 2 ,1)
-Pt2FittedFunction('C', 5, 1, 8 ,2)
+Pt2FittedFunction('C', 5, 1, 13 ,2)
 Pt2FittedFunction('C', 5, 2, 2 ,1)
-Pt2FittedFunction('C', 5, 2, 8 ,2)
+Pt2FittedFunction('C', 5, 2, 13 ,2)
 

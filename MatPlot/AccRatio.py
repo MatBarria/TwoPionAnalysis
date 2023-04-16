@@ -4,6 +4,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FormatStrFormatter
 import mplhep as hep
+from include import inputDirectory, outputDirectory, systematicDirectory
 
 plt.style.use(hep.style.ATLAS)  # or ATLAS/LHCb2
 
@@ -32,29 +33,36 @@ def PtBroadZhTarSplitAccRatio():
     fig.subplots_adjust(left = None, bottom = None, right = None, top = None, wspace = 0.02, 
                         hspace = 0.02)
 
-    file = ROOT.TFile.Open(inputDirectory + "Pt_broad_Zh_RatioDataAcc.root", "READ")
+    fileData = ROOT.TFile.Open(inputDirectory + "Pt_broad_Zh_Data.root", "READ")
+    fileCorr = ROOT.TFile.Open(inputDirectory + "Pt_broad_Zh.root", "READ")
 
     tarList   = ["C", "Fe", "Pb"]
     colorList = ["red", "Blue", "black"]
     labelList = ["One $\pi +$", "Two $\pi+$", "Three $\pi +$"]
 
     for i in range(3): # Loops on the diffrent targets
-        axs[i].set_ylim(-105, 105)
+        axs[i].set_ylim(0.8, 5)
         axs[i].set_xlim(0.075, 1.03)
-        for j in range(3): # Loops on the number of pions
-            graphName = "PtBroad_Zh_" + tarList[i] + "_RatioDataAcc_" + str(j)
-            graph     = file.Get(graphName)
+        for j in range(2): # Loops on the number of pions
+            graphName = "PtBroad_Zh_" + tarList[i] + "_" + str(j)
+            # print(fileCorr)
+            # print(fileData)
+            graphData = fileData.Get(graphName)
+            graphCorr = fileCorr.Get(graphName)
             # Extrac the data from the TGraph
-            nPoints = graph.GetN()
-            x  = np.ndarray(nPoints, dtype = float, buffer = graph.GetX())
+            # nPoints = graphCorr.GetN()
+            nPoints = 8
+            x  = np.ndarray(nPoints, dtype = float, buffer = graphCorr.GetX())
             x  = x + (-ZhShift + ZhShift*j) # Shit the data for readability
-            y  = np.ndarray(nPoints, dtype = float, buffer = graph.GetY())
-            ey = np.ndarray(nPoints, dtype = float, buffer = graph.GetEY())
+            yData  = np.ndarray(nPoints, dtype = float, buffer = graphData.GetY())
+            yCorr  = np.ndarray(nPoints, dtype = float, buffer = graphCorr.GetY())
+            # ey = np.ndarray(nPoints, dtype = float, buffer = graph.GetEY())
             # Generate the plot
             # axs[i].errorbar(x, y, ey, marker = "o", linestyle = "", markerfacecolor = colorList[j],
             #                 color = colorList[j], markersize = 6, label = labelList[j])
-            axs[i].plot(x, y, marker = "o", linestyle = "", markerfacecolor = colorList[j],
-                       color = colorList[j], markersize = 6, label = labelList[j])
+            axs[i].plot(x, yData/yCorr, marker = "o", markerfacecolor = colorList[j],
+                       color = colorList[j], markersize = 6, label = labelList[j],
+                        linestyle = "")
 
     # Set the labels for the three plots
     axs[0].set_ylabel(r'$\Delta P_\mathrm{T}^{2}(UnCorr) [GeV^{2}]/P_\mathrm{T}^{2}(Acc) [GeV^{2}]$', loc = "center", fontsize = 15)
@@ -66,22 +74,19 @@ def PtBroadZhTarSplitAccRatio():
     axs[1].annotate(r'Iron',   xy = (0.04, 1.04), xycoords = 'axes fraction', fontsize = 15)
     axs[2].annotate(r'Lead',   xy = (0.04, 1.04), xycoords = 'axes fraction', fontsize = 15)
 
-    axs[0].legend(frameon = False, loc = 'upper right', fontsize = 11)
+    axs[0].legend(frameon = False, loc = 'upper left', fontsize = 11)
 
-    fig.show()
-
-    fig.align_ylabels(axs[:])
-    fig.savefig(outputDirectory + "PtBroad_Zh_Target_RatioDataAcc.pdf", bbox_inches = 'tight')
-    print(outputDirectory + "PtBroad_Zh_Target_RatioDataAcc.pdf Has been created")
+    # fig.align_ylabels(axs[:])
+    # fig.savefig(outputDirectory + "RatioDataAcc.pdf", bbox_inches = 'tight')
+    # print(outputDirectory + "PtBroad_Zh_Target_RatioDataAcc.pdf Has been created")
 
     for i in range(3):
         axs[i].grid(visible = None, axis = 'both', color = '0.95')
         axs[i].set_axisbelow(True)
 
-    fig.show()
 
     fig.align_ylabels(axs[:])
-    fig.savefig(outputDirectory + "PtBroad_Zh_Target-Grid_RatioDataAcc.pdf", bbox_inches = 'tight')
+    fig.savefig(outputDirectory + "RatioDataAcc.pdf", bbox_inches = 'tight')
     print(outputDirectory + "PtBroad_Zh_Target-Grid_RatioDataAcc.pdf Has been created")
 
 
@@ -150,4 +155,4 @@ def PtBroadZhNPionSplitAccRatio():
 # Call funtions
 
 PtBroadZhTarSplitAccRatio()
-PtBroadZhNPionSplitAccRatio()
+# PtBroadZhNPionSplitAccRatio()

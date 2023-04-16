@@ -35,7 +35,7 @@ void PhiIntegration(TFile* inputFile, TFile* outputFile, const char* target) {
                         // Take the hist for this bins
                         TH1F* histPhi = (TH1F*) inputFile->Get(Form("DataCorr2_%s_%i%i%i%i_%i", 
                                     target, Q2Counter, NuCounter, ZhCounter, Pt2Counter, nPion));
-                        //TH1F* histPhi = (TH1F*) inputFile->Get(Form("DataCorr_%s_%i%i%i%i_%i", 
+                        //TH1F* histPhi = (TH1F*) inputFile->Get(Form("Data_%s_%i%i%i%i_%i", 
                                     //target, Q2Counter, NuCounter, ZhCounter, Pt2Counter, nPion));
                         // If the histogram is null or empty skip this Pt2 bin
                         if(histPhi == NULL){ continue; }
@@ -68,9 +68,11 @@ void Q2NuIntegration(TFile* inputFile, TFile* outputFile, const char* target) {
     for(int nPion = 1; nPion <= N_PION; nPion++) { // Loops in every number of pion
         // Generate a histogram to save Zh for every number of pion in the final event
         TH1F* histZh = new TH1F(Form("corr_data_%s_%i_Zh", target, nPion), "", N_Zh, Zh_BINS);
+        
         for(int ZhCounter = 0 ; ZhCounter < N_Zh ; ZhCounter++) { // Loops in every Zh bin
-            // Generate a histogram for every bin of zh
+
             TH1F* histPt2Sum = new TH1F("histPt2", "", N_Pt2, Pt2_MIN, Pt2_MAX);
+            
             for(int NuCounter = 0 ; NuCounter < N_Nu ; NuCounter++) { // Loops in every Nu bin
                 for(int Q2Counter = 0 ; Q2Counter < N_Q2 ; Q2Counter++) { // Loops in every Q2 bin
                     // Sum the histograms for every bin of Q2 and Nu
@@ -80,6 +82,7 @@ void Q2NuIntegration(TFile* inputFile, TFile* outputFile, const char* target) {
 
                     histPt2Sum->Add(histPt2);
                     delete histPt2;
+
                 } // End Q2 loop
             } // End Nu loop
 
@@ -103,7 +106,80 @@ void Q2NuIntegration(TFile* inputFile, TFile* outputFile, const char* target) {
 
 }
 
-// Integrate the Pt2 histograms for Q2, Nu and Zh bins
+void NuZhIntegration(TFile* inputFile, TFile* outputFile, const char* target) {
+
+    for(int nPion = 1; nPion <= N_PION ; nPion++) { 
+        TH1F* histQ2 = new TH1F(Form("corr_data_%s_%i_Q2", target, nPion), "", N_Q2, Q2_BINS);
+        for(int Q2Counter = 0 ; Q2Counter < N_Q2 ; Q2Counter++) { // Loops in every Q2 bin
+            TH1F* histPt2Integrated = new TH1F(Form("corr_data_Pt2_%s_%i", 
+                        target, Q2Counter), "", N_Pt2, Pt2_MIN, Pt2_MAX);
+            for(int NuCounter = 0 ; NuCounter < N_Nu ; NuCounter++) {
+                for(int ZhCounter = ZH_SUM ; ZhCounter < N_Zh ; ZhCounter++) { 
+
+                    TH1F* histPt2 = (TH1F*) inputFile->Get(Form("corr_data_Pt2_%s_%i%i%i_%i", 
+                                target, Q2Counter, NuCounter, ZhCounter, nPion));
+                    // Sum the histograms for every bin of Zh and Nu
+                    histPt2Integrated->Add(histPt2);
+                    delete histPt2;
+
+                }// End Zh loop
+            }// End Nu loop
+            // Take the mean and save in the Q2 histogram
+            histQ2->SetBinContent(Q2Counter + 1, histPt2Integrated->GetMean());
+            histQ2->SetBinError(Q2Counter + 1,   histPt2Integrated->GetMeanError());
+            delete histPt2Integrated;
+        }// End Q2 loop
+
+        outputFile->cd();
+        histQ2->Write(Form("meanPt2_%s_%i", target, nPion));
+        gROOT->cd();
+        delete histQ2;
+
+    }// End number pion event
+
+}
+
+
+void Q2ZhIntegration(TFile* inputFile, TFile* outputFile, const char* target) {
+
+    for(int nPion = 1; nPion <= N_PION; nPion++) { // Loops in every number of pion
+
+        TH1F* histNu = new TH1F(Form("corr_data_%s_Nu", target), "", N_Nu, Nu_BINS);
+        
+        for(int NuCounter = 0 ; NuCounter < N_Nu ; NuCounter++) { // Loops in every Nu bin
+            
+            TH1F* histPt2Integrated = new TH1F(Form("corr_data_Pt2_%s_%i", target, NuCounter),
+                                 "", N_Pt2, Pt2_MIN, Pt2_MAX);
+            
+            for(int ZhCounter = ZH_SUM ; ZhCounter < N_Zh ; ZhCounter++) { 
+                for(int Q2Counter = 0 ; Q2Counter < N_Q2 ; Q2Counter++) { 
+
+                    TH1F* histPt2 = (TH1F*) inputFile->Get(Form("corr_data_Pt2_%s_%i%i%i_%i",
+                                target, Q2Counter, NuCounter, ZhCounter, nPion));
+                    histPt2Integrated->Add(histPt2);
+                    delete histPt2;
+               
+                    }// End Q2 loop
+            }// End Zh loop
+            
+            // Take the mean and save in the Nu histogram
+            histNu->SetBinContent(NuCounter+1, histPt2Integrated->GetMean());
+            histNu->SetBinError(NuCounter+1,   histPt2Integrated->GetMeanError());
+            delete histPt2Integrated;
+
+        }// End Nu loop
+
+        // Open the direction of the output file and save the data
+        outputFile->cd();
+        histNu->Write(Form("meanPt2_%s_%i", target, nPion));
+        gROOT->cd();
+        delete histNu;
+    
+        } // End number pion event loop
+
+}
+
+
 void ZhIntegration(TFile* inputFile, TFile* outputFile, const char* target) {
 
     for(int nPion = 1; nPion <= N_PION; nPion++) { // Loops in every number of pion
@@ -176,6 +252,40 @@ void CallQ2NuIntegration(TString inputDirectory, TString outputDirectory) {
     for (int i = 0; i < N_STARGETS; i++) {
         Q2NuIntegration(inputFile, outputFile, SolTargets[i]);
         Q2NuIntegration(inputFile, outputFile, LiqTargets[i]);
+    }
+
+    inputFile->Close();
+    outputFile->Close();
+
+}
+
+
+void CallQ2ZhIntegration(TString inputDirectory, TString outputDirectory) {
+
+    TFile* inputFile  = new TFile(inputDirectory  + "corr_data_Pt2.root", "READ");
+    TFile* outputFile = new TFile(outputDirectory + "meanPt2_Nu.root", "RECREATE");
+    gROOT->cd();
+
+    for (int i = 0; i < N_STARGETS; i++) {
+        Q2ZhIntegration(inputFile, outputFile, SolTargets[i]);
+        Q2ZhIntegration(inputFile, outputFile, LiqTargets[i]);
+    }
+
+    inputFile->Close();
+    outputFile->Close();
+
+}
+
+
+void CallNuZhIntegration(TString inputDirectory, TString outputDirectory) {
+
+    TFile* inputFile  = new TFile(inputDirectory  + "corr_data_Pt2.root", "READ");
+    TFile* outputFile = new TFile(outputDirectory + "meanPt2_Q2.root", "RECREATE");
+    gROOT->cd();
+
+    for (int i = 0; i < N_STARGETS; i++) {
+        NuZhIntegration(inputFile, outputFile, SolTargets[i]);
+        NuZhIntegration(inputFile, outputFile, LiqTargets[i]);
     }
 
     inputFile->Close();

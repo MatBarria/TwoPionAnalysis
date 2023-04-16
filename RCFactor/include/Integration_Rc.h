@@ -28,7 +28,7 @@ void PhiIntegration(TFile* inputFile, TFile* outputFile, char target[]) {
             for(int NuCounter = 0 ; NuCounter < N_Nu; NuCounter++) { // Loops in every Nu bin
                 for(int ZhCounter = 0 ; ZhCounter < N_Zh; ZhCounter++) { // Loops in every Zh bin;
                     TH1F* histPt2 = new TH1F(Form("corr_data_Pt2_%s_%i%i%i_%i", target, 
-                                Q2Counter, NuCounter, ZhCounter, nPion), "", N_Pt2, Pt2_BINS);
+                        Q2Counter, NuCounter, ZhCounter, nPion), "", N_Pt2, Pt2_MIN, Pt2_MAX);
                     for(int Pt2Counter = 0 ; Pt2Counter < N_Pt2 ; Pt2Counter++) { 
                         TH1F* histPhi = (TH1F*) inputFile->Get(Form("DataCorrRc_%s_%i%i%i%i_%i",
                                 target, Q2Counter, NuCounter, ZhCounter, Pt2Counter, nPion));
@@ -68,7 +68,7 @@ void Q2NuIntegration(TFile* inputFile, TFile* outputFile, char target[]) {
         TH1F* histZh = new TH1F(Form("corr_data_%s_%i_Zh", target, nPion), "", N_Zh, Zh_BINS);
         for(int ZhCounter = 0 ; ZhCounter < N_Zh ; ZhCounter++) { // Loops in every Zh bin
             // Generate a histogram for every bin of zh
-            TH1F* histPt2Integrated = new TH1F("histPt2Sum", "", N_Pt2, Pt2_BINS);
+            TH1F* histPt2Integrated = new TH1F("histPt2Sum", "", N_Pt2, Pt2_MIN, Pt2_MAX);
             for(int NuCounter = 0 ; NuCounter < N_Nu ; NuCounter++) { // Loops in every Nu bin
                 for(int Q2Counter = 0 ; Q2Counter < N_Q2 ; Q2Counter++) { // Loops in every Q2 bin
                     // Sum the histograms for every bin of Q2 and Nu
@@ -106,7 +106,8 @@ void ZhIntegration(TFile* inputFile, TFile* outputFile, char target[]) {
     for(int nPion = 1; nPion <= N_PION; nPion++) { // Loops in every number of pion
         TH1F* hist = new TH1F(Form("corr_data_%s", target), "", 1, 0, 1);
         // To save the sum of the histograms
-        TH1F* histPt2Integrated = new TH1F(Form("corr_data_%s_Pt2", target), "", N_Pt2, Pt2_BINS);
+        TH1F* histPt2Integrated = new TH1F(Form("corr_data_%s_Pt2", target), "", N_Pt2,
+                                                Pt2_MIN, Pt2_MAX);
         // Starts in the second bin because there is not broadening iz Zh<0.2
         for(int ZhCounter = ZH_SUM ; ZhCounter < N_Zh ; ZhCounter++) { // Loops in every Zh bin
 

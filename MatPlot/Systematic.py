@@ -17,34 +17,38 @@ N_Zh  = 8
 
 ZhBinning = [0.075, 0.2, 0.3, 0.4,0.5, 0.6, 0.8, 1.03]
 
-dic_label_sys = { "DZLow"   : "$\Delta Z < 2.5$ cm",
-                  "DZHigh"  : "$\Delta Z < 3.5$ cm",
-                  "70Bins"  : "70 $Pt^2$ bins",
-                  "110Bins" : "110 $Pt^2$ bins",
-                  "VC_RD"   : "Vertex Cut RD",
-                  "VC_HH"   : "Vertex Cut HH",
-                  "Normal"  : "Cut off applied",
-                  "Cutoff"  : "No background subtraction", 
-                  "TOFLow"  : "TOF Cut P < 2.5 GeV", 
-                  "TOFHigh" : "TOF Cut P < 2.9 GeV", 
-                  "NAccept0": "N Accept $\geq$ 0",
-                  "NAccept2": "N Accept $\geq$ 2",
-                  "NAcceptRec": "N Accept Rec $\geq$ 2",
+dic_label_sys = { "DZLow"      : "$\Delta Z < 2.5$ cm",
+                  "DZHigh"     : "$\Delta Z < 3.5$ cm",
+                  "50Bins"     : "50 $Pt^2$ bins",
+                  "70Bins"     : "70 $Pt^2$ bins",
+                  "VC_RD"      : "Vertex Cut RD",
+                  "VC_HH"      : "Vertex Cut HH",
+                  "Normal"     : "Cut off applied",
+                  "Cutoff"     : "No background subtraction", 
+                  "TOFLow"     : "TOF Cut P < 2.5 GeV", 
+                  "TOFHigh"    : "TOF Cut P < 2.9 GeV", 
+                  "LimitLow"   : "Acc_3 < 0.005", 
+                  "LimitHigh"  : "Acc_3 < 0.001", 
+                  "NAccept0"   : "N Accept $\geq$ 0",
+                  "NAccept2"   : "N Accept $\geq$ 2",
+                  "NAcceptRec" : "N Accept Rec $\geq$ 2",
                  }
 
-dicPlotName = {   "DZLow"   : "DZ_Cut",
-                  "DZHigh"  : "DZ_Cut",
-                  "70Bins"  : "Bins_Variation",
-                  "110Bins" : "Bins_Variation",
-                  "VC_RD"   : "Vertex_Cut",
-                  "VC_HH"   : "Vertex_Cut",
-                  "Normal"  : "BG_Subtraction",
-                  "Cutoff"  : "BG_Subtraction", 
-                  "TOFHigh" : "TOF_Cut",
-                  "TOFLow"  : "TOF_Cut", 
-                  "NAccept0": "N_Accept",
-                  "NAccept2": "N_Accept",
-                  "NAcceptRec": "N_Accept",
+dicPlotName = {   "DZLow"      : "DZ_Cut",
+                  "DZHigh"     : "DZ_Cut",
+                  "50Bins"     : "Bins_Variation",
+                  "70Bins"     : "Bins_Variation",
+                  "VC_RD"      : "Vertex_Cut",
+                  "VC_HH"      : "Vertex_Cut",
+                  "Normal"     : "BG_Subtraction",
+                  "Cutoff"     : "BG_Subtraction", 
+                  "TOFHigh"    : "TOF_Cut",
+                  "TOFLow"     : "TOF_Cut", 
+                  "LimitHigh"  : "AccLimit",
+                  "LimitLow"   : "AccLimit", 
+                  "NAccept0"   : "N_Accept",
+                  "NAccept2"   : "N_Accept",
+                  "NAcceptRec" : "N_Accept",
                  }
 
 tarList      = ["C", "Fe", "Pb"]
@@ -63,19 +67,14 @@ def SystematicError(systematic):
     fig.subplots_adjust(left = None, bottom = None, right = None, top = None, wspace = 0.02,
                         hspace = 0.3)
 
-    # fileSystematic = ROOT.TFile.Open(inputDirectory + "Percentaje.root", "READ")
-    # fileSystematic = [ROOT.TFile.Open(systematicDirectory + systematic[0] + "/Pt_broad_Zh.root", 
-                                     # "READ"),
-                      # ROOT.TFile.Open(systematicDirectory + systematic[1] + "/Pt_broad_Zh.root", 
-                                      # "READ")]
-    fileSystematic = [ROOT.TFile.Open(inputDirectory + "/Pt_broad_Zh.root", 
+    # fileSystematicdd = ROOT.TFile.Open(inputDirectory + "Percentaje.root", "READ")
+    fileSystematic = [ROOT.TFile.Open(systematicDirectory + systematic[0] + "/Pt_broad_Zh.root", 
                                      "READ"),
                       ROOT.TFile.Open(systematicDirectory + systematic[1] + "/Pt_broad_Zh.root", 
                                       "READ")]
-    # fileNominal    = ROOT.TFile.Open(inputDirectory + "Pt_broad_Zh.root", "READ")
-    fileNominal    = ROOT.TFile.Open(systematicDirectory + "NAccept0/Pt_broad_Zh.root", "READ")
+    fileNominal    = ROOT.TFile.Open(inputDirectory + "Pt_broad_Zh.root", "READ")
 
-
+    print(systematicDirectory + systematic[1] + "/Pt_broad_Zh.root")
     for i in range(3): # Loops on the diffrent targets
         for j in range(nPion): # Loops on the number of pions
 
@@ -97,9 +96,8 @@ def SystematicError(systematic):
                 y  = np.ndarray(nPointsNom, dtype = float, buffer = graphNom.GetY())
                 ey = np.ndarray(nPointsNom, dtype = float, buffer = graphNom.GetEY())
 
-                print("target: " + tarList[i])
-                print("N pions: " + str(j+1))
-                print("Sys: " + systematic[s])
+                print("Target: " + tarList[i] + " ;N pions: " + str(j+1) + 
+                      " ;Sys: " + systematic[s])
                 ySys = np.absolute((y-ySys)/ySys)*100              
                 print(ySys)
 
@@ -162,10 +160,11 @@ def SystematicError(systematic):
           ".pdf Has been created")
 
 
-# SystematicError(["Normal", "Cutoff"])
-# SystematicError(["70Bins", "110Bins"])
-# SystematicError(["DZLow",  "DZHigh"])
-# SystematicError(["VC_RD",  "VC_HH"])
-# SystematicError(["TOFLow", "TOFHigh"])
+# SystematicError(["Normal",   "Cutoff"])
+# SystematicError(["50Bins",   "70Bins"])
+# SystematicError(["DZLow",    "DZHigh"])
+# SystematicError(["VC_RD",    "VC_HH"])
+# SystematicError(["TOFLow",   "TOFHigh"])
+SystematicError(["LimitLow", "LimitHigh"])
 # SystematicError(["NAccept0", "NAccept2"])
-SystematicError(["NAccept0", "NAcceptRec"])
+# SystematicError(["NAccept0", "NAcceptRec"])

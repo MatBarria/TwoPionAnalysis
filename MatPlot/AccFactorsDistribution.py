@@ -71,7 +71,7 @@ def AccFactorsDistribution():
 
 def FinalFactorsDistribution():
 
-    vars = ['Acc', 'FalPos']
+    vars = ['FinalFactor']
     fig, axs = plt.subplots(1, 1, sharey = 'row', sharex = 'col')
     width  = 6
     height = 6/1.2 
@@ -85,29 +85,24 @@ def FinalFactorsDistribution():
     fig.set_size_inches(width, height)
     axs.set_xlim(0.0, 1.)
         # AddCLasPleliminary(axs[i])
-    axs.set_ylim(0, 0.1)
-    Acc = np.array([])
-    FalPos = np.array([])
-    totalFactors = np.array([]) 
+    axs.set_ylim(0, 0.09)
+    FFactor = np.array([])
     for j in range(nPion): # Loops on the number of pions
         for i in range(3): # Loops on the diffrent targets
             with ur.open(inputDirectory + 
                 "AccTuple.root:ntuple_" + tarList[i] + "_" + str(j+1)) as file:
                 factors  = file.arrays(vars, library = "np")
-                Acc = np.concatenate((totalFactors,factors['Acc']), axis = 0)
-                FalPos = np.concatenate((totalFactors,factors['FalPos']), axis = 0)
+                FFactor = np.concatenate((FFactor,factors['FinalFactor']), axis = 0)
         
-        totalFactors = Acc[FalPos!=0]/FalPos[FalPos!=0]
-        weights = np.ones_like(totalFactors) / float(len(totalFactors))
-        axs.hist(totalFactors, bins = 110, range = (-0., 1.1), weights=weights, 
+        FFactor = FFactor[FFactor != 0]
+        weights = np.ones_like(FFactor) / float(len(FFactor))
+        axs.hist(FFactor, bins = 110, range = (-0., 1.1), weights=weights, 
                  color = colorList[j], histtype="step", label = nPionList[j])
-        Acc = np.array([])
-        FalPos = np.array([])
-        totalFactors = np.array([]) 
+        FFactor = np.array([])
 
     axs.tick_params(right = False, top = False, which = 'both')
-    axs.set_xlabel(r'$Factor$', fontsize = 14)
-    axs.set_ylabel(r'$dN/d(Factor)$' , loc = "center", fontsize = 15)
+    axs.set_xlabel(r'$Acc$', fontsize = 14)
+    axs.set_ylabel(r'$dN/d(Acc)$' , loc = "center", fontsize = 15)
 
     if draw_label: 
         axs.legend(frameon = False, loc = 'upper right', fontsize = 11)

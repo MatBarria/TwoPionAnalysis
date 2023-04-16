@@ -64,6 +64,9 @@ def SystematicError(systematic):
             graphNameNom = "PtBroad_Zh_" + tarList[i] + "_" + str(j)
             graphNom     = fileNominal.Get(graphNameNom)
 
+            nPointsNom = graphNom.GetN()
+            y  = np.ndarray(nPointsNom, dtype = float, buffer = graphNom.GetY())
+            ey = np.ndarray(nPointsNom, dtype = float, buffer = graphNom.GetEY())
             for s in range(3):
 
                 graphNameSys = "PtBroad_Zh_" + tarList[i] + "_" + str(j)
@@ -73,9 +76,6 @@ def SystematicError(systematic):
                 nPointsSys = graphSys.GetN()
                 xSys  = np.ndarray(nPointsSys, dtype = float, buffer = graphSys.GetX())
                 ySys  = np.ndarray(nPointsSys, dtype = float, buffer = graphSys.GetY())
-                nPointsNom = graphNom.GetN()
-                y  = np.ndarray(nPointsNom, dtype = float, buffer = graphNom.GetY())
-                ey = np.ndarray(nPointsNom, dtype = float, buffer = graphNom.GetEY())
 
                 print("target: " + tarList[i])
                 print("N pions: " + str(j+1))
@@ -179,7 +179,7 @@ def PtBroadZhTarSplit():
                 x  = x + (-ZhShift + ZhShift*2*j) # Shit the data for readability
                 y  = np.ndarray(nPoints, dtype = float, buffer = graph.GetY())
                 ey = np.ndarray(nPoints, dtype = float, buffer = graph.GetEY())
-                print(ey)
+                # print(ey)
                 # Generate the plot
                 axs[i].errorbar(x, y, ey, marker = markerList[f], linestyle = "",
                                 markerfacecolor = colorList[j], color = colorList[j], 

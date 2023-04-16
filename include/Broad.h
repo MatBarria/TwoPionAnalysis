@@ -114,3 +114,73 @@ void PtBroadeningZh(TString inputDirectory, TString outputDirectory) {
     outputFile->Close();
 
 }
+
+
+void PtBroadeningQ2(TString inputDirectory, TString outputDirectory) {
+
+    TFile* inputFile  = new TFile(inputDirectory + "meanPt2_Q2.root", "READ");
+    TFile* outputFile = new TFile(outputDirectory + "Pt_broad_Q2.root", "RECREATE");
+    gROOT->cd();
+
+    TString meanPt2;
+    meanPt2 = "meanPt2_%s_%i"; 
+
+    for(int nPion = 1; nPion <= N_PION; nPion++) { // Loops in every number of pion
+        for(int i = 0 ; i < N_STARGETS ; i++) { // Loops in the diffent targets
+            
+            TH1F* histSolid  = (TH1F*) inputFile->Get(Form(meanPt2, SolTargets[i], nPion));
+            TH1F* histLiquid = (TH1F*) inputFile->Get(Form(meanPt2, LiqTargets[i], nPion));
+
+            TH1F* histBroadening = new TH1F(Form("histBroadening_%i",i), "", N_Q2, Q2_BINS);
+            histBroadening->Add(histSolid, histLiquid, 1, -1);
+
+            TGraphErrors* graph = (TGraphErrors*) TH1TOTGraph(histBroadening);
+            outputFile->cd();
+            graph->Write(Form("PtBroad_Q2_%s_%i", SolTargets[i], nPion-1)); 
+            gROOT->cd();
+
+            delete histSolid;
+            delete histLiquid;
+            delete histBroadening;
+            delete graph;
+        }
+    } // End number pion event loop
+    inputFile->Close();
+    outputFile->Close();
+
+}
+
+void PtBroadeningNu(TString inputDirectory, TString outputDirectory) {
+
+    TFile* inputFile  = new TFile(inputDirectory + "meanPt2_Nu.root", "READ");
+    TFile* outputFile = new TFile(outputDirectory + "Pt_broad_Nu.root", "RECREATE");
+    gROOT->cd();
+
+    TString meanPt2;
+    meanPt2 = "meanPt2_%s_%i"; 
+
+    for(int nPion = 1; nPion <= N_PION; nPion++) { // Loops in every number of pion
+        for(int i = 0 ; i < N_STARGETS ; i++) { // Loops in the diffent targets
+            
+            TH1F* histSolid  = (TH1F*) inputFile->Get(Form(meanPt2, SolTargets[i], nPion));
+            TH1F* histLiquid = (TH1F*) inputFile->Get(Form(meanPt2, LiqTargets[i], nPion));
+
+            TH1F* histBroadening = new TH1F(Form("histBroadening_%i",i), "", N_Nu, Nu_BINS);
+            histBroadening->Add(histSolid, histLiquid, 1, -1);
+
+            TGraphErrors* graph = (TGraphErrors*) TH1TOTGraph(histBroadening);
+            outputFile->cd();
+            graph->Write(Form("PtBroad_Nu_%s_%i", SolTargets[i], nPion-1)); 
+            gROOT->cd();
+
+            delete histSolid;
+            delete histLiquid;
+            delete histBroadening;
+            delete graph;
+        }
+    } // End number pion event loop
+
+    inputFile->Close();
+    outputFile->Close();
+
+}

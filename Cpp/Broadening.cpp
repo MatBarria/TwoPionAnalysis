@@ -10,9 +10,16 @@ int main(){
 
   std::cout << "Full Integrated Broad" << std::endl;
   PtBroadeningFullIntegrated(inputDirectory, outputDirectory);
+
   std::cout << "Zh depended Broad" << std::endl;
   PtBroadeningZh(inputDirectory, outputDirectory);
-  t.Print();
+  
+  std::cout << "Q2 depended Broad" << std::endl;
+  PtBroadeningQ2(inputDirectory, outputDirectory);
 
+  std::cout << "Nu depended Broad" << std::endl;
+  PtBroadeningNu(inputDirectory, outputDirectory);
+  
+  t.Print();
 
 }

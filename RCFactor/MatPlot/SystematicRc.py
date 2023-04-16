@@ -56,6 +56,9 @@ def SystematicError():
             ey = np.ndarray(nPointsNom, dtype = float, buffer = graphNom.GetEY())
 
             ySys = np.absolute((y-ySys)/ySys)*100              
+            print("Target: " + tarList[i] + " N Pion: " + str(j + 1))
+            print(ySys)
+            
             # Generate the plot
             axs[j][i].plot(xSys, ySys, marker = "o", linestyle = "", color = colorListSys[j], 
                      markerfacecolor = colorListSys[j], markersize = 6, label = labelListSys[j])

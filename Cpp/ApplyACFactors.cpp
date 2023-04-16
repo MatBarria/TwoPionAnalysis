@@ -47,7 +47,7 @@ int ApplyAccFactors(std::string target,TFile* fileOutput) {
     Pt2_BINS[0] = 0.;
     for(int i = 1; i <= N_Pt2; i++) {
         Pt2_BINS[i] = Pt2_BINS[i-1] + Delta_Pt2;
-        std::cout << "Pt Bin " << i << ": " << Pt2_BINS[i] << std::endl;
+        //std::cout << "Pt Bin " << i << ": " << Pt2_BINS[i] << std::endl;
     }
 
     TStopwatch t;

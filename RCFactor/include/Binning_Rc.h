@@ -22,7 +22,7 @@ const int ZH_SUM = 1;
 //#define N_Pt2 90
 #define N_Pt2 60
 float Pt2_BINS[N_Pt2+1];
-#define N_Phi 7
+#define N_Phi 12
 float Phi_BINS[N_Phi+1];
 
 const float Delta_Pt2 = 3.0/N_Pt2;

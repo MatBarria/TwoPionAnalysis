@@ -2,9 +2,11 @@ cd ..
 
 mkdir -p bin
 
-g++ -Wall -fPIC -I./include `root-config --cflags` ApplyRcFactor.cpp -o ./bin/ApplyRcFactor  `root-config --glibs` ./include/Integration_Rc.h
-
 g++ -Wall -fPIC -I./include `root-config --cflags` Interpolate_Rc.cpp -o ./bin/Interpolate_Rc `root-config --glibs` ./include/Binning_Rc.h
+
+g++ -Wall -fPIC -I./include `root-config --cflags` Interpolate_Rc_Empty.cpp -o ./bin/Interpolate_Rc_Empty `root-config --glibs` ./include/Binning_Rc.h
+
+g++ -Wall -fPIC -I./include `root-config --cflags` ApplyRcFactor.cpp -o ./bin/ApplyRcFactor  `root-config --glibs` ./include/Integration_Rc.h
 
 g++ -Wall -fPIC -I./include `root-config --cflags` Integration_Rc.cpp -o ./bin/Integration_Rc  `root-config --glibs` ./include/Integration_Rc.h
 
@@ -21,6 +23,7 @@ cd bin
 
 echo "-----Interpolation-----"
 ./Interpolate_Rc 
+./Interpolate_Rc_Empty 
 echo "-----Apply Rc factors-----"
 ./ApplyRcFactor 
 echo "-----Integrate histograms-----"
@@ -41,6 +44,6 @@ echo "-----Percentaje-----"
 #python3 Percentaje_Rc.py
 python3 SystematicRc.py
 echo "-----Ratio-----"
-#python3 AccRcRatio.py
+python3 AccRcRatio.py
 echo "-----Pt2 Distributionsv-----"
 python3 Pt2Distribution.py
