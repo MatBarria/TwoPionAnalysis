@@ -12,7 +12,7 @@ ZhShift  = 0.0075
 FullShft = 0.0375
 
 # Upper limmit in the y axis
-FullYlimit = 0.035
+FullYlimit = 0.031
 ZhYlimit   = 0.09
 
 nPion = 2;
@@ -54,31 +54,52 @@ def PtBroadZhTarSplit():
 
     labelList = ["One $\pi +$", "Two $\pi+$", "Three $\pi +$"]
     for i in range(3): # Loops on the diffrent targets
+        
         # AddCLasPleliminary(axs[i])
         axs[i].set_ylim(0, ZhYlimit)
         axs[i].set_xlim(0.075, 1.03)
+
         for j in range(nPion): # Loops on the number of pions
+
+            # Get info from the TGraph  
             graphName = "PtBroad_Zh_" + tarList[i] + "_" + str(j)
             graph     = file.Get(graphName)
-            # Extrac the data from the TGraph
             nPoints = graph.GetN()
+
             x  = np.ndarray(nPoints, dtype = float, buffer = graph.GetX())
             x  = x + (-ZhShift + ZhShift*2*j) # Shit the data for readability
             y  = np.ndarray(nPoints, dtype = float, buffer = graph.GetY())
             ey = np.ndarray(nPoints, dtype = float, buffer = graph.GetEY())
+            
+            # Plot with stat errors
             axs[i].errorbar(x, y, ey, marker = "o", linestyle = "",
                             markerfacecolor = colorList[j], color = colorList[j], 
                             markersize = 5, label = labelList[j])
+            
+            # Plot with stat + Sys errors
             axs[i].errorbar(x, y, np.sqrt(ey*ey + 
                     systematicDiccionaryZh[tarList[i]][j]*systematicDiccionaryZh[tarList[i]][j]),
                     marker = "", linestyle = "", markerfacecolor = colorList[j], lw = 0,
                                         color = colorList[j], markersize = 0, capsize = 5)
         
-        axs[i].set_xlabel(r'$Zh_\mathrm{SUM}$', fontsize = 14)
-    # Set the labels for the three plots
-    axs[0].set_ylabel(r'$\Delta P_\mathrm{T}^{2} [GeV^{2}]$', loc = "center", 
-                    fontsize = 15)
+            
+            print("Target: " + tarList[i] + " N Pion: " + str(j+1))
+            print("Broadening: ")
+            print(y)
+            print("Stat Error: ")
+            print(ey)
+            print("Sys Error: ")
+            print(systematicDiccionaryZh[tarList[i]][j])
+            print("Tot Error: ")
+            print(np.sqrt(ey*ey + 
+                    systematicDiccionaryZh[tarList[i]][j]*systematicDiccionaryZh[tarList[i]][j]))
+        
 
+        axs[i].set_xlabel(r'$Zh_\mathrm{SUM}$', fontsize = 14)
+    
+
+    # Set the labels for the three plots
+    axs[0].set_ylabel(r'$\Delta P_\mathrm{T}^{2} [GeV^{2}]$', loc = "center", fontsize = 15)
     axs[0].annotate(r'Carbon', xy = (0.04, 1.04), xycoords = 'axes fraction', fontsize = 15)
     axs[1].annotate(r'Iron',   xy = (0.04, 1.04), xycoords = 'axes fraction', fontsize = 15)
     axs[2].annotate(r'Lead',   xy = (0.04, 1.04), xycoords = 'axes fraction', fontsize = 15)
@@ -113,8 +134,11 @@ def PtBroadZhNPionSplit():
 
     for i in range(3): # Loops on the diffrent targets
         for j in range(nPion): # Loops on the number of pions
+            
             axs[j].set_ylim(0, ZhYlimit)
             axs[j].set_xlim(0.075, 1.03)
+
+            # Get info from the TGraph  
             graphName = "PtBroad_Zh_" + tarList[i] + "_" + str(j)
             graph     = file.Get(graphName)
             nPoints = graph.GetN()
@@ -122,17 +146,24 @@ def PtBroadZhNPionSplit():
             x  = x + (-ZhShift + ZhShift*i)
             y  = np.ndarray(nPoints, dtype = float, buffer = graph.GetY())
             ey = np.ndarray(nPoints, dtype = float, buffer = graph.GetEY())
+
+            # Plot with stat errors
             axs[j].errorbar(x, y, ey, marker = "o", linestyle = "", label = tarList[i],
                             color = colorList[i], markersize = 6, markerfacecolor = colorList[i])
 
+            # Plot with stat + sys errors
             axs[j].errorbar(x, y, np.sqrt(ey*ey + 
                     systematicDiccionaryZh[tarList[i]][j]*systematicDiccionaryZh[tarList[i]][j]),
                     marker = "", linestyle = "", markerfacecolor = colorList[i], lw = 0,
                                         color = colorList[i], markersize = 0, capsize = 5)
 
+
+
     axs[0].set_ylabel(r'$\Delta P_\mathrm{T}^{2} [GeV^{2}]$', loc = "center", fontsize = 15)
     axs[0].set_xlabel(r'$Z_\mathrm{h}$', fontsize = 14)
     axs[1].set_xlabel(r'$Z_\mathrm{h}$', fontsize = 14)
+
+    fig.align_ylabels(axs[:])
 
     axs[0].annotate(r'One Pion', xy = (0.04, 1.04), xycoords = 'axes fraction', fontsize = 15)
     axs[1].annotate(r'Two Pion', xy = (0.04, 1.04), xycoords = 'axes fraction', fontsize = 15)
@@ -140,13 +171,11 @@ def PtBroadZhNPionSplit():
     axs[0].legend(frameon = False, loc = 'upper left', fontsize = 11)
     axs[0].yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
 
-    fig.align_ylabels(axs[:])
-    # fig.savefig(outputDirectory + "PtBroad_Zh_NPion.pdf", bbox_inches = 'tight')
-    # print(outputDirectory + "PtBroad_Zh_NPion.pdf Has been created")
 
     for i in range(nPion):
         axs[i].grid(visible = None, axis = 'both', color = '0.95')
         axs[i].set_axisbelow(True)
+    
 
     fig.savefig(outputDirectory + "PtBroad_Zh_NPion.pdf", bbox_inches = 'tight')
     print(outputDirectory + "PtBroad_Zh_NPion-Grid.pdf Has been created")
@@ -165,10 +194,13 @@ def PtBroadFullIntegrated():
     file = ROOT.TFile.Open(inputDirectory + "Pt_broad_FullIntegrated.root", "READ")
 
     # AddCLasPleliminary(Axs)
+    
     for i in range(3): # Loops on the diffrent targets
         for j in range(nPion): # Loops on the number of pions
+            
             axs.set_ylim(0, FullYlimit)
             axs.set_xlim(1.5, 6.5)
+            
             graphName = "PtBroad_FullIntegrated_" + tarList[i] + "_" + str(j+1)
             graph     = file.Get(graphName)
             nPoints = graph.GetN()
@@ -344,14 +376,14 @@ def BroadRatio():
         ey = (np.abs(y2/y1))*(np.sqrt(((ey1*ey1)/(y1*y1))+((ey2*ey2)/(y2*y2)))) 
 
         axs[i].errorbar(x, y2/y1, ey, marker = "o", linestyle = "", 
-                        markerfacecolor = 'b', color = 'b', markersize = 5)
+                        markerfacecolor = colorList[i], color = colorList[i], markersize = 5)
         ey1 = np.sqrt(ey1*ey1 + 
             systematicDiccionaryZh[tarList[i]][0]*systematicDiccionaryZh[tarList[i]][0])
         ey2 = np.sqrt(ey2*ey2 + 
             systematicDiccionaryZh[tarList[i]][1]*systematicDiccionaryZh[tarList[i]][1])
         ey = (np.abs(y2/y1))*(np.sqrt(((ey1*ey1)/(y1*y1))+((ey2*ey2)/(y2*y2)))) 
-        axs[i].errorbar(x, y2/y1, ey ,marker = "", linestyle = "", markerfacecolor = "b", lw = 0,
-                     color = "b", markersize = 0, capsize = 5)
+        axs[i].errorbar(x, y2/y1, ey ,marker = "", linestyle = "", markerfacecolor = colorList[i], 
+                        lw = 0, color = colorList[i], markersize = 0, capsize = 5)
     # Set the labels for the three plots
     axs[0].set_ylabel(r'$\Delta P_\mathrm{T}^{2}(2 \pi^+) [GeV^{2}]/P_\mathrm{T}^{2}(1\pi^+) [GeV^{2}]$', loc = "center", fontsize = 15)
     axs[0].set_xlabel(r'$Zh_\mathrm{SUM}$', fontsize = 14)
@@ -420,6 +452,7 @@ def CalculateTotalSystematicFull(systematics, i, j):
     sysErrorArray = np.array([0.,0.])
     
     for systematic in systematics:
+
         fileSystematic = [ROOT.TFile.Open(systematicDirectory + systematic[0] + 
                                           "/Pt_broad_FullIntegrated.root", "READ"),
                            ROOT.TFile.Open(systematicDirectory + systematic[1] + 
@@ -437,6 +470,7 @@ def CalculateTotalSystematicFull(systematics, i, j):
     sysErrorArray = np.sqrt(sysErrorArray)
     return(sysErrorArray)
 
+
 systematicDiccionaryZh = { "C"  : [np.repeat(0., 8), np.repeat(0., 8)],
                            "Fe" : [np.repeat(0., 8), np.repeat(0., 8)],
                            "Pb" : [np.repeat(0., 8), np.repeat(0., 8)],
@@ -449,14 +483,13 @@ systematicDiccionaryFull = { "C"  : [np.repeat(0., 2), np.repeat(0., 2)],
 
 
 
+systematics = [["Normal", "Cutoff"], ["50Bins", "70Bins"], ["DZLow",  "DZHigh"],
+               ["VC_RD",  "VC_HH"], ["TOFLow", "TOFHigh"], ["CT", "CT"], ["RC", "RC"],
+               ["LimitLow", "LimitHigh"], ["NAccept0", "NAccept2"]]
+
 # systematics = [["Normal", "Cutoff"], ["50Bins", "70Bins"], ["DZLow",  "DZHigh"],
-               # ["VC_RD",  "VC_HH"], ["TOFLow", "TOFHigh"]]
-systematics = [["Normal", "Cutoff"], ["50Bins", "70Bins"], 
-               ["VC_RD",  "VC_HH"], ["TOFLow", "TOFHigh"]]
-               # ,["LimitLow", "LimitHigh"]]
-               
-# systematics = [["NAccept0", "NAccept2"]] 
-# systematics = [["50Bins", "70Bins"]] 
+               # ["VC_RD",  "VC_HH"], ["TOFLow", "TOFHigh"], ["CT", "CT"], ["RC", "RC"],
+               # ["LimitLow", "LimitHigh"]]
 
 
 def CallCalculateTotalSystemticZh(systematicDiccionaryZh, systematicDiccionaryFull):

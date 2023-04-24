@@ -110,5 +110,5 @@ def FinalFactorsDistribution():
     fig.savefig(outputDirectory +  "FinalFactordistribution_.pdf", bbox_inches = 'tight')
     print(outputDirectory +  "FinalFactordistribution_.pdf Has been created")
 
-AccFactorsDistribution()
+# AccFactorsDistribution()
 FinalFactorsDistribution()

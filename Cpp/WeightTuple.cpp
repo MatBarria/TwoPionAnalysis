@@ -1,4 +1,4 @@
-// g++ -Wall -fPIC -I../include `root-config --cflags` AccFactorsTuple.cpp -o ../bin/AccFactorsTuple  `root-config --glibs` ../include/Binning.h
+// g++ -Wall -fPIC -I../include `root-config --cflags` WeightTuple.cpp -o ../bin/WeightTuple `root-config --glibs` ../include/Binning.h
 
 #include "Binning.h"
 #include <iostream>
@@ -8,35 +8,38 @@
 #include "TROOT.h"
 #include "TNtuple.h"
 
-int AccTuple(std::string target, TFile* fileDataCorr ,TFile* fileOutput);
-const char* VarList = "Q2:Nu:Zh:Pt2:PhiPQ:FinalFactor";
+int WeightsTuple(std::string target, TFile* fileWeights ,TFile* fileOutput);
+const char* VarList = "Q2:Nu:Zh:Pt2:PhiPQ:weight";
 
 int main() {
 
-    TFile *fileDataCorr = new TFile(inputDirectory + "corr_data_Phi.root", "READ");
-    TFile* fileOutput = new TFile(outputDirectory + "AccTuple.root", "RECREATE");
+
+
+    TString CTDirectory = "/home/matias/proyecto/TwoPionAnalysis/Data/60Systematic/CT/";
+    TFile* fileWeights = new TFile(CTDirectory + "Weights.root"       , "READ");
+    TFile* fileOutput = new TFile(outputDirectory + "WeightTuple.root", "RECREATE");
 
     std::cout << "Acceptance Tuple for C" << std::endl;
-    AccTuple("C", fileDataCorr, fileOutput);
+    WeightsTuple("C", fileWeights, fileOutput);
     std::cout << "Acceptance Tuple for Fe" << std::endl;
-    AccTuple("Fe", fileDataCorr, fileOutput);
+    WeightsTuple("Fe", fileWeights, fileOutput);
     std::cout << "Acceptance Tuple for Pb" << std::endl;
-    AccTuple("Pb", fileDataCorr, fileOutput);
+    WeightsTuple("Pb", fileWeights, fileOutput);
     std::cout << "Acceptance Tuple for DC" << std::endl;
-    AccTuple("DC", fileDataCorr, fileOutput);
+    WeightsTuple("DC", fileWeights, fileOutput);
     std::cout << "Acceptance Tuple for DFe" << std::endl;
-    AccTuple("DFe", fileDataCorr, fileOutput);
+    WeightsTuple("DFe", fileWeights, fileOutput);
     std::cout << "Acceptance Tuple for DPb" << std::endl;
-    AccTuple("DPb", fileDataCorr, fileOutput);
+    WeightsTuple("DPb", fileWeights, fileOutput);
 
-    fileDataCorr->Close();
+    fileWeights->Close();
     fileOutput->Close();
 
     return 0;
 }
 
 
-int AccTuple(std::string target, TFile* fileDataCorr ,TFile* fileOutput) {
+int WeightsTuple(std::string target, TFile* fileWeights ,TFile* fileOutput) {
     
     Pt2_BINS[0] = 0.;
     Phi_BINS[0] = -180;
@@ -52,7 +55,7 @@ int AccTuple(std::string target, TFile* fileDataCorr ,TFile* fileOutput) {
     char targetArr[n + 1];
     strcpy(targetArr, target.c_str());	
 
-    float FinalFactor;
+    float weight;
 
     gROOT->cd();
     for(int nPion = 1; nPion <= N_PION ; nPion++) { // Loops in every number of generated pions
@@ -64,31 +67,23 @@ int AccTuple(std::string target, TFile* fileDataCorr ,TFile* fileOutput) {
                 for(int ZhCounter = 1; ZhCounter < N_Zh; ZhCounter++) { // Loops in every Zh bin
                     for(int Pt2Counter = 0; Pt2Counter < N_Pt2; Pt2Counter++) { 
                         
-                        TH1F* PhiHistFinalFactor = (TH1F*) fileDataCorr->Get(
-                                Form("FinalFactor_%s_%i%i%i%i_%i",
-                                targetArr, Q2Counter, NuCounter, ZhCounter, Pt2Counter, nPion)); 
+                        TH1F *histWeight = (TH1F*) fileWeights->Get(Form("Weight_%s_%i%i%i%i_%i",
+                                targetArr, Q2Counter, NuCounter, ZhCounter, Pt2Counter, nPion));
 
-                        if(PhiHistFinalFactor == NULL) { 
-
-                            delete PhiHistFinalFactor;
+                        if(histWeight == NULL) { 
+                            delete histWeight;
                             continue; 
-                        
                         }
 
                         for(int PhiCounter = 0; PhiCounter < N_Phi; PhiCounter++) {
-
-                            FinalFactor = PhiHistFinalFactor->GetBinContent(PhiCounter+1); 
-
-                            if(FinalFactor != 0) { 
-                            
+                            weight = histWeight->GetBinContent(PhiCounter+1); 
+                            if(weight != 0) {
                                 ntupleSave->Fill(Q2Counter, NuCounter, ZhCounter, Pt2Counter, 
-                                    PhiCounter, FinalFactor);
-                            
+                                    PhiCounter, weight);
                             }
 
-
                         } // End Phi loop
-                        delete PhiHistFinalFactor;
+                        delete histWeight;
                     } // End Phi loop
                 } // End Phi loop
             } // End Phi loop

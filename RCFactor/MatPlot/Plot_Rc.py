@@ -98,7 +98,7 @@ def PtBroadFullIntegrated():
         for j in range(nPion): # Loops on the number of pions
             axs.set_ylim(0, FullYlimit)
             axs.set_xlim(1.5, 6.5)
-            graphName = "PtBroad_FullIntegrated_" + tarList[i] + "_" + str(j)
+            graphName = "PtBroad_FullIntegrated_" + tarList[i] + "_" + str(j+1)
             graphRC     = fileRC.Get(graphName)
             nPoints = graphRC.GetN()
             x  = np.ndarray(nPoints, dtype = float, buffer = graphRC.GetX())

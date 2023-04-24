@@ -55,7 +55,7 @@ def SystematicError():
             y  = np.ndarray(nPointsNom, dtype = float, buffer = graphNom.GetY())
             ey = np.ndarray(nPointsNom, dtype = float, buffer = graphNom.GetEY())
 
-            ySys = np.absolute((y-ySys)/ySys)*100              
+            ySys = np.absolute((y-ySys)/y)*100              
             print("Target: " + tarList[i] + " N Pion: " + str(j + 1))
             print(ySys)
             

@@ -74,7 +74,8 @@ def PtBroadZhTarSplitAccRatio():
     axs[1].annotate(r'Iron',   xy = (0.04, 1.04), xycoords = 'axes fraction', fontsize = 15)
     axs[2].annotate(r'Lead',   xy = (0.04, 1.04), xycoords = 'axes fraction', fontsize = 15)
 
-    axs[0].legend(frameon = False, loc = 'upper left', fontsize = 11)
+    axs[0].legend(frameon = True, loc = (.053,.76), fontsize = 11, 
+                  handlelength = .5, handleheight = .5)
 
     # fig.align_ylabels(axs[:])
     # fig.savefig(outputDirectory + "RatioDataAcc.pdf", bbox_inches = 'tight')

@@ -38,46 +38,46 @@ def EmptyBinsSimZhDist():
                         wspace = 0.02, hspace = 0.02)
 
     bins = [0, 1, 2, 3, 4, 5, 6, 7, 8]
-    dic = {"Data" : np.array([]), "Zh" : np.array([])}
+    # dic = {"Data" : np.array([]), "ZhBin" : np.array([])}
     for i in range(3): # Loops on the diffrent targets
         for j in range(nPion): # Loops on the number of pions
 
+            axs[i].set_xlim(1.001, 8)
+            axs[i].set_ylim(0, .5)
             with ur.open(inputDirectory + 
                 "EmptyBins.root:EmptyBins_"+ tarList[i] + "_" + str(j+1)) as file:
-                temp = file.arrays(vars, library = "np")
-                dic["Data"] = np.concatenate((dic["Data"],temp['Data']), axis = 0)
-                dic["Zh"] = np.concatenate((dic["Zh"],temp['ZhBin']), axis = 0)
+                dic = file.arrays(vars, library = "np")
             
-            weights = dic["Zh"][dic["Data"] == 0]
+            weights = dic["ZhBin"][dic["Data"] == 0]
             for k in range(8):
-                if(len(dic["Zh"][dic["Zh"] == k]) == 0):
+                if(len(dic["ZhBin"][dic["ZhBin"] == k]) == 0):
                     weights[weights == k] = 0
                 else:
-                    weights[weights == k] = 1/ float(len(dic["Zh"][dic["Zh"] == k]))
+                    weights[weights == k] = 1/ float(len(dic["ZhBin"][dic["ZhBin"] == k]))
 
-            axs[i].hist(dic["Zh"][dic["Data"] == 0], bins = bins, weights = weights,
+            axs[i].hist(dic["ZhBin"][dic["Data"] == 0], bins = bins, weights = weights,
                  color = colorList[j], histtype="step", label = nPionList[j])
-            dic = {"Data" : np.array([]), "Zh" : np.array([])}
+            # dic = {"Data" : np.array([]), "ZhBin" : np.array([])}
             
             with ur.open(inputDirectory + 
                 "EmptyBins.root:EmptyBins_D"+ tarList[i] + "_" + str(j+1)) as file:
-                temp = file.arrays(vars, library = "np")
-                dic["Data"] = np.concatenate((dic["Data"],temp['Data']), axis = 0)
-                dic["Zh"] = np.concatenate((dic["Zh"],temp['ZhBin']), axis = 0)
+                dic = file.arrays(vars, library = "np")
+                # dic["Data"] = np.concatenate((dic["Data"],temp['Data']), axis = 0)
+                # dic["ZhBin"] = np.concatenate((dic["ZhBin"],temp['ZhBin']), axis = 0)
             
-            weights = dic["Zh"][dic["Data"] == 0]
+            weights = dic["ZhBin"][dic["Data"] == 0]
             for k in range(8):
-                if(len(dic["Zh"][dic["Zh"] == k]) == 0):
+                if(len(dic["ZhBin"][dic["ZhBin"] == k]) == 0):
                     weights[weights == k] = 0
                 else:
-                    weights[weights == k] = 1/ float(len(dic["Zh"][dic["Zh"] == k]))
+                    weights[weights == k] = 1/ float(len(dic["ZhBin"][dic["ZhBin"] == k]))
 
-            axs[i].hist(dic["Zh"][dic["Data"] == 0], bins = bins, weights = weights,
+            axs[i].hist(dic["ZhBin"][dic["Data"] == 0], bins = bins, weights = weights,
                  color = colorList[j], histtype="step", label = nPionList[j], linestyle = "--")
             axs[i].tick_params(right = False, top = False, which = 'both')
-            dic = {"Data" : np.array([]), "Zh" : np.array([])}
+            # dic = {"Data" : np.array([]), "ZhBin" : np.array([])}
         
-        axs[i].set_xlabel(r'$Zh Bin$', fontsize = 14)
+        axs[i].set_xlabel(r'$Z_h$ Bin', fontsize = 14)
 
         axs[0].set_ylabel(r'$EmptyBins$' , loc = "center", fontsize = 15)
     
@@ -86,7 +86,7 @@ def EmptyBinsSimZhDist():
     axs[2].annotate(r'Lead',   xy = (0.04, 1.04), xycoords = 'axes fraction', fontsize = 15)
 
     if draw_label: 
-        axs[0].legend(frameon = False, loc = 'upper left', fontsize = 11)
+        axs[0].legend(frameon = False, loc = 'upper right', fontsize = 11)
 
     fig.savefig(outputDirectory + "EmptyBinSimulationZh.pdf", bbox_inches = 'tight')
     print(outputDirectory + "EmptyBinSimulationZh.pdf Has been created")
@@ -103,46 +103,39 @@ def EmptyBinsSimPt2Dist():
     fig.subplots_adjust(left = None, bottom = None, right = None, top = None,
                         wspace = 0.02, hspace = 0.02)
 
-    dic = {"Data" : np.array([]), "Pt2" : np.array([])}
     for i in range(3): # Loops on the diffrent targets
         for j in range(nPion): # Loops on the number of pions
 
             with ur.open(inputDirectory + 
                 "EmptyBins.root:EmptyBins_"+ tarList[i] + "_" + str(j+1)) as file:
-                temp = file.arrays(vars, library = "np")
-                dic["Data"] = np.concatenate((dic["Data"],temp['Data']), axis = 0)
-                dic["Pt2"] = np.concatenate((dic["Pt2"],temp['Pt2Bin']), axis = 0)
+                dic = file.arrays(vars, library = "np")
             
-            weights = dic["Pt2"][dic["Data"] == 0]
+            weights = dic["Pt2Bin"][dic["Data"] == 0]
             for k in range(60):
-                if(len(dic["Pt2"][dic["Pt2"] == k]) == 0):
+                if(len(dic["Pt2Bin"][dic["Pt2Bin"] == k]) == 0):
                     weights[weights == k] = 0
                 else:
-                    weights[weights == k] = 1/ float(len(dic["Pt2"][dic["Pt2"] == k]))
+                    weights[weights == k] = 1/ float(len(dic["Pt2Bin"][dic["Pt2Bin"] == k]))
 
-            axs[i].hist(dic["Pt2"][dic["Data"] == 0], bins = 60, range = (0, 60), weights = weights,
+            axs[i].hist(dic["Pt2Bin"][dic["Data"] == 0], bins = 60, range = (0, 60), weights = weights,
                  color = colorList[j], histtype="step", label = nPionList[j])
-            dic = {"Data" : np.array([]), "Pt2" : np.array([])}
             
             with ur.open(inputDirectory + 
                 "EmptyBins.root:EmptyBins_D"+ tarList[i] + "_" + str(j+1)) as file:
-                temp = file.arrays(vars, library = "np")
-                dic["Data"] = np.concatenate((dic["Data"],temp['Data']), axis = 0)
-                dic["Pt2"] = np.concatenate((dic["Pt2"],temp['Pt2Bin']), axis = 0)
+                dic = file.arrays(vars, library = "np")
             
-            weights = dic["Pt2"][dic["Data"] == 0]
+            weights = dic["Pt2Bin"][dic["Data"] == 0]
             for k in range(60):
-                if(len(dic["Pt2"][dic["Pt2"] == k]) == 0):
+                if(len(dic["Pt2Bin"][dic["Pt2Bin"] == k]) == 0):
                     weights[weights == k] = 0
                 else:
-                    weights[weights == k] = 1/ float(len(dic["Pt2"][dic["Pt2"] == k]))
+                    weights[weights == k] = 1/ float(len(dic["Pt2Bin"][dic["Pt2Bin"] == k]))
 
-            axs[i].hist(dic["Pt2"][dic["Data"] == 0], bins = 60, range = (0, 60), weights = weights,
+            axs[i].hist(dic["Pt2Bin"][dic["Data"] == 0], bins = 60, range = (0, 60), weights = weights,
                  color = colorList[j], histtype="step", label = nPionList[j], linestyle = "--")
             axs[i].tick_params(right = False, top = False, which = 'both')
-            dic = {"Data" : np.array([]), "Pt2" : np.array([])}
         
-        axs[i].set_xlabel(r'$Pt2 Bin$', fontsize = 14)
+        axs[i].set_xlabel(r'$Pt2Bin Bin$', fontsize = 14)
 
         axs[0].set_ylabel(r'$EmptyBins$' , loc = "center", fontsize = 15)
     

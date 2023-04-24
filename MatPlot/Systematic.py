@@ -27,11 +27,14 @@ dic_label_sys = { "DZLow"      : "$\Delta Z < 2.5$ cm",
                   "Cutoff"     : "No background subtraction", 
                   "TOFLow"     : "TOF Cut P < 2.5 GeV", 
                   "TOFHigh"    : "TOF Cut P < 2.9 GeV", 
-                  "LimitLow"   : "Acc_3 < 0.005", 
-                  "LimitHigh"  : "Acc_3 < 0.001", 
+                  "LimitLow"   : "Acc_3 > 0.012", 
+                  "LimitHigh"  : "Acc_3 > 0.017", 
                   "NAccept0"   : "N Accept $\geq$ 0",
                   "NAccept2"   : "N Accept $\geq$ 2",
                   "NAcceptRec" : "N Accept Rec $\geq$ 2",
+                  "CT"         : "Clousure Test",
+                  "4DAcc"      : "4D-Acc",
+                  "RC"         : "Radiative Corrections",
                  }
 
 dicPlotName = {   "DZLow"      : "DZ_Cut",
@@ -49,13 +52,17 @@ dicPlotName = {   "DZLow"      : "DZ_Cut",
                   "NAccept0"   : "N_Accept",
                   "NAccept2"   : "N_Accept",
                   "NAcceptRec" : "N_Accept",
+                  "CT" : "CT",
+                  "4DAcc" : "4D-Acc",
+                  "RC"         : "RC",
                  }
 
 tarList      = ["C", "Fe", "Pb"]
 colorListSys = ["darkred", "darkBlue", "black"]
 colorListNom = ["red", "Blue", "black"]
 markerList   = ["^", "v"]
-labelListNom = ["Sta. Error One $\pi +$", "Sta. Error Two $\pi+$", "Sta. Error Three $\pi +$"]
+labelListNom = ["Sta. Error One $\pi^+$", "Sta. Error Two $\pi^+$", "Sta. Error Three $\pi^+$"]
+nPionList  = ["One $\pi^+$", "Two $\pi^+$", "Three $\pi^+$"]
 
 def SystematicError(systematic):
 
@@ -80,10 +87,16 @@ def SystematicError(systematic):
 
             axs[j][i].set_ylim(0, YLimit)
             axs[j][i].set_xlim(0.075, 1.03)
+            # axs[j][i].set_ylim(0, 21)
+            # axs[j][i].set_xlim(0.2, 0.8)
             graphNameNom = "PtBroad_Zh_" + tarList[i] + "_" + str(j)
             graphNom     = fileNominal.Get(graphNameNom)
 
-            for s in range(2):
+            NSys = 2
+            if systematic[0] == systematic[1]:
+                NSys = 1 
+
+            for s in range(NSys):
 
                 graphNameSys = "PtBroad_Zh_" + tarList[i] + "_" + str(j)
                 graphSys     = fileSystematic[s].Get(graphNameSys)
@@ -98,7 +111,7 @@ def SystematicError(systematic):
 
                 print("Target: " + tarList[i] + " ;N pions: " + str(j+1) + 
                       " ;Sys: " + systematic[s])
-                ySys = np.absolute((y-ySys)/ySys)*100              
+                ySys = np.absolute((y-ySys)/y)*100              
                 print(ySys)
 
                 # Generate the plot
@@ -138,12 +151,12 @@ def SystematicError(systematic):
         axs[i][1].set_xlabel(r'$Zh_\mathrm{SUM}$', fontsize = 14)
         axs[i][2].set_xlabel(r'$Zh_\mathrm{SUM}$', fontsize = 14)
 
-        axs[i][0].annotate(r'Carbon', xy = (0.04, 1.04), xycoords = 'axes fraction', 
-                           fontsize = 15)
-        axs[i][1].annotate(r'Iron',   xy = (0.04, 1.04), xycoords = 'axes fraction',
-                           fontsize = 15)
-        axs[i][2].annotate(r'Lead',   xy = (0.04, 1.04), xycoords = 'axes fraction', 
-                           fontsize = 15)
+        axs[i][0].annotate(r'Carbon - ' + nPionList[i], xy = (0.04, 1.04),
+                           xycoords = 'axes fraction', fontsize = 15)
+        axs[i][1].annotate(r'Iron - '+ nPionList[i], xy = (0.04, 1.04), 
+                           xycoords = 'axes fraction', fontsize = 15)
+        axs[i][2].annotate(r'Lead - ' + nPionList[i],   xy = (0.04, 1.04), 
+                           xycoords = 'axes fraction', fontsize = 15)
 
         axs[i][0].legend(frameon = False, loc = 'upper center', fontsize = 11)
 
@@ -160,11 +173,13 @@ def SystematicError(systematic):
           ".pdf Has been created")
 
 
-# SystematicError(["Normal",   "Cutoff"])
-# SystematicError(["50Bins",   "70Bins"])
-# SystematicError(["DZLow",    "DZHigh"])
-# SystematicError(["VC_RD",    "VC_HH"])
-# SystematicError(["TOFLow",   "TOFHigh"])
+SystematicError(["Normal",   "Cutoff"])
+SystematicError(["50Bins",   "70Bins"])
+SystematicError(["DZLow",    "DZHigh"])
+SystematicError(["VC_RD",    "VC_HH"])
+SystematicError(["TOFLow",   "TOFHigh"])
 SystematicError(["LimitLow", "LimitHigh"])
-# SystematicError(["NAccept0", "NAccept2"])
-# SystematicError(["NAccept0", "NAcceptRec"])
+SystematicError(["NAccept0", "NAccept2"])
+SystematicError(["CT", "CT"])
+SystematicError(["RC", "RC"])
+# SystematicError(["4DAcc", "4DAcc"])

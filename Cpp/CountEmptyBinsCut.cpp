@@ -14,6 +14,7 @@
 
 
 int CountEmptyBinsSim(std::string target, TFile* noCutFile, TFile* cutFile, TFile* outputFile);
+int SetEmptyHistogram(TH1F* hist);
 
 int main() {
 
@@ -66,15 +67,17 @@ int CountEmptyBinsSim(std::string target, TFile* noCutFile, TFile* cutFile, TFil
                             delete cutHist;
                             continue;
                         }
+                        if(cutHist == NULL) {
+                            cutHist = new TH1F("CutHist", "", N_Phi, -180, 180);
+                            SetEmptyHistogram(cutHist);
+                        }
                         for(int PhiCounter = 0; PhiCounter < N_Phi; PhiCounter++) {
-                            if(cutHist == NULL) {
-                                saveTuple->Fill(Q2Counter, NuCounter, ZhCounter, Pt2Counter, 
-                                        PhiCounter, 0);
-                            } else if(noCutHist->GetBinContent(PhiCounter + 1) != 0 
+                            if(noCutHist->GetBinContent(PhiCounter + 1) != 0 
                                     && cutHist->GetBinContent(PhiCounter + 1) == 0) {
                                 saveTuple->Fill(Q2Counter, NuCounter, ZhCounter, Pt2Counter, 
                                         PhiCounter, 0);
-                            } else {
+                            } else if(noCutHist->GetBinContent(PhiCounter + 1) != 0 
+                                    && cutHist->GetBinContent(PhiCounter + 1) != 0){
                                 saveTuple->Fill(Q2Counter, NuCounter, ZhCounter, Pt2Counter, 
                                         PhiCounter, 1);
                             }
@@ -91,5 +94,14 @@ int CountEmptyBinsSim(std::string target, TFile* noCutFile, TFile* cutFile, TFil
         gROOT->cd();
         delete saveTuple;
     } // End number of pion loop
+    return 0;
+}
+
+int SetEmptyHistogram(TH1F* hist) {
+
+    for (int i = 1; i <= N_Phi; i++) {
+        hist->SetBinContent(i, 0) ;
+    }
+
     return 0;
 }

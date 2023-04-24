@@ -86,9 +86,9 @@ void PtBroadeningFullIntegrated(TString inputDirectory, TString plotDirectory) {
 
     for(int i = 0; i < N_STARGETS; i++){
         for(int j = 0; j < N_PION; j++) {
-            if(i == 0) { g[i][j]->Write(Form("PtBroad_FullIntegrated_C_%i" , j)); };
-            if(i == 1) { g[i][j]->Write(Form("PtBroad_FullIntegrated_Fe_%i", j)); };
-            if(i == 2) { g[i][j]->Write(Form("PtBroad_FullIntegrated_Pb_%i", j)); };
+            if(i == 0) { g[i][j]->Write(Form("PtBroad_FullIntegrated_C_%i" , j+1)); };
+            if(i == 1) { g[i][j]->Write(Form("PtBroad_FullIntegrated_Fe_%i", j+1)); };
+            if(i == 2) { g[i][j]->Write(Form("PtBroad_FullIntegrated_Pb_%i", j+1)); };
         }
     }
 
