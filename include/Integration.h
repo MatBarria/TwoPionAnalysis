@@ -180,7 +180,8 @@ void Q2ZhIntegration(TFile* inputFile, TFile* outputFile, const char* target) {
 }
 
 
-void ZhIntegration(TFile* inputFile, TFile* outputFile, const char* target) {
+void ZhIntegration(TFile* inputFile, TFile* outputFile, const char* target, int firstBin,
+                    int lastBin) {
 
     for(int nPion = 1; nPion <= N_PION; nPion++) { // Loops in every number of pion
         // Generate two histograms for every number of pion in the final event
@@ -190,7 +191,7 @@ void ZhIntegration(TFile* inputFile, TFile* outputFile, const char* target) {
         TH1F* histPt2Sum= new TH1F(Form("corr_data_%s_Pt2", target), "", N_Pt2, Pt2_MIN, 
                                         Pt2_MAX);
         // Starts in the second bin because there is not broadening iz Zh<0.1
-        for(int ZhCounter = ZH_SUM ; ZhCounter < N_Zh ; ZhCounter++) { // Loops in every Zh bin
+        for(int ZhCounter = firstBin ; ZhCounter < lastBin ; ZhCounter++) { // Loops in every Zh bin
 
             TH1F* histPt2;
             if(UseCutOff == 1) {
@@ -294,19 +295,27 @@ void CallNuZhIntegration(TString inputDirectory, TString outputDirectory) {
 }
 
 
-void CallZhIntegration(TString inputDirectory, TString outputDirectory) {
+void CallZhIntegration(TString inputDirectory, TString outputDirectory, int firstBin,
+                     int lastBin) {
 
     TFile* inputFile  = new TFile(inputDirectory  + "meanPt2_Zh_processed.root", "READ");
-    TFile* outputFile = new TFile(outputDirectory + "meanPt2.root", "RECREATE");
+    TString outputFileName;
+
+    if(lastBin == N_Zh) {
+        outputFileName = outputDirectory + "meanPt2.root";
+    }else {
+        outputFileName = outputDirectory + "meanPt2ZhCut.root";
+    }
+
+    TFile* outputFile = new TFile(outputFileName, "RECREATE");
     gROOT->cd();
 
     for (int i = 0; i < N_STARGETS; i++) {
-        ZhIntegration(inputFile, outputFile, SolTargets[i]);
-        ZhIntegration(inputFile, outputFile, LiqTargets[i]);
+        ZhIntegration(inputFile, outputFile, SolTargets[i], firstBin, lastBin);
+        ZhIntegration(inputFile, outputFile, LiqTargets[i], firstBin, lastBin);
     }
 
     inputFile->Close();
     outputFile->Close();
 
 }
-

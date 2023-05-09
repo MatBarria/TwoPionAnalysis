@@ -1,6 +1,5 @@
 #include "TString.h"
-//const TString inputDirectory  = "/home/matias/proyecto/TwoPionAnalysis/Data/Nominal/";
-//const TString outputDirectory = "/home/matias/proyecto/TwoPionAnalysis/Data/Nominal/";
+
 const TString inputDirectory  = "/home/matias/proyecto/TwoPionAnalysis/Data/Bins/60/";
 const TString outputDirectory = "/home/matias/proyecto/TwoPionAnalysis/Data/Bins/60/";
 const TString dataDirectory  = "/home/matias/proyecto/Pt2Broadening_multi-pion/Data/";

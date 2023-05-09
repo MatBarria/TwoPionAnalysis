@@ -31,10 +31,11 @@ TGraphErrors* TH1TOTGraph(TH1 *h1) {
 }
 
 // Calculate the Pt broadening and plot in funcion of the size of the target
-void PtBroadeningFullIntegrated(TString inputDirectory, TString plotDirectory) {
+void PtBroadeningFullIntegrated(TString inputDirectory, TString plotDirectory, 
+                                TString inputName, TString outputName) {
     
-    TFile* inputFile = new TFile(inputDirectory + "meanPt2.root", "READ");
-    TFile* outputFile = new TFile(outputDirectory + "Pt_broad_FullIntegrated.root", "RECREATE");
+    TFile* inputFile = new TFile(inputDirectory + inputName, "READ");
+    TFile* outputFile = new TFile(outputDirectory + outputName, "RECREATE");
     gROOT->cd();  
     // A^(1\3) C , Fe , Pb
     double nuclearSizes[N_STARGETS] = { TMath::Power(12.01,1./3.), TMath::Power(55.845,1./3.),
@@ -54,8 +55,8 @@ void PtBroadeningFullIntegrated(TString inputDirectory, TString plotDirectory) {
 
             // Set the points in TGraphErrors
             TGraphErrors* graph = new TGraphErrors();
-            graph->SetPoint(1, nuclearSizes[i], histBroadening->GetBinContent(1));
-            graph->SetPointError(1, 0, histBroadening->GetBinError(1));
+            graph->SetPoint(0, nuclearSizes[i], histBroadening->GetBinContent(1));
+            graph->SetPointError(0, 0, histBroadening->GetBinError(1));
             
             outputFile->cd();
             graph->Write(Form("PtBroad_FullIntegrated_%s_%i" , SolTargets[i], nPion));

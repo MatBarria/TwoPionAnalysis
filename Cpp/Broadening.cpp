@@ -9,7 +9,10 @@ int main(){
   TStopwatch t;
 
   std::cout << "Full Integrated Broad" << std::endl;
-  PtBroadeningFullIntegrated(inputDirectory, outputDirectory);
+  PtBroadeningFullIntegrated(inputDirectory, outputDirectory, "meanPt2.root",
+                            "Pt_broad_FullIntegrated.root");
+  PtBroadeningFullIntegrated(inputDirectory, outputDirectory, "meanPt2ZhCut.root",
+                            "Pt_broad_FullIntegratedZhCut.root");
 
   std::cout << "Zh depended Broad" << std::endl;
   PtBroadeningZh(inputDirectory, outputDirectory);

@@ -3,8 +3,9 @@
 const TString dataDirectory  = "/home/matias/proyecto/Pt2Broadening_multi-pion/Data/";
 const TString inputDirectory  = "/home/matias/proyecto/TwoPionAnalysis/Data/Bins/60/NomError/";
 const TString outputDirectory = "/home/matias/proyecto/TwoPionAnalysis/Data/Bins/60/NomError/";
-//const TString inputDirectory  = "/home/matias/proyecto/TwoPionAnalysis/Data/60Systematic/RC/";
-//const TString outputDirectory = "/home/matias/proyecto/TwoPionAnalysis/Data/60Systematic/RC/";
+//const TString inputDirectory  = "/home/matias/proyecto/TwoPionAnalysis/Data/60Systematic/RCInter/";
+//const TString outputDirectory = "/home/matias/proyecto/TwoPionAnalysis/Data/60Systematic/RCInter/";
+
 const int N_Pt2_Corr = 60;
 const int N_Pt2 = 60;
 const int N_Phi_Corr = 6;

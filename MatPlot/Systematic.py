@@ -10,7 +10,7 @@ plt.style.use(hep.style.ATLAS)  # or ATLAS/LHCb2
 ZhShift  = 0.015
 
 # Upper limmit in the y axis
-YLimit = 40
+YLimit = 65
 
 nPion = 2
 N_Zh  = 8
@@ -27,14 +27,15 @@ dic_label_sys = { "DZLow"      : "$\Delta Z < 2.5$ cm",
                   "Cutoff"     : "No background subtraction", 
                   "TOFLow"     : "TOF Cut P < 2.5 GeV", 
                   "TOFHigh"    : "TOF Cut P < 2.9 GeV", 
-                  "LimitLow"   : "Acc_3 > 0.012", 
-                  "LimitHigh"  : "Acc_3 > 0.017", 
+                  "LimitLow"   : "Acc_3 > 0.017", 
+                  "LimitHigh"  : "Acc_3 > 0.020", 
                   "NAccept0"   : "N Accept $\geq$ 0",
                   "NAccept2"   : "N Accept $\geq$ 2",
                   "NAcceptRec" : "N Accept Rec $\geq$ 2",
                   "CT"         : "Clousure Test",
                   "4DAcc"      : "4D-Acc",
                   "RC"         : "Radiative Corrections",
+                  "RCInter"    : "RC Interpolated",
                  }
 
 dicPlotName = {   "DZLow"      : "DZ_Cut",
@@ -55,6 +56,7 @@ dicPlotName = {   "DZLow"      : "DZ_Cut",
                   "CT" : "CT",
                   "4DAcc" : "4D-Acc",
                   "RC"         : "RC",
+                  "RCInter"         : "RC",
                  }
 
 tarList      = ["C", "Fe", "Pb"]
@@ -146,7 +148,7 @@ def SystematicError(systematic):
     fileSystematic[1].Close()
 
     for i in range(nPion):
-        axs[i][0].set_ylabel(r'Devation from Nominal(%)', loc = "center", fontsize = 15)
+        axs[i][0].set_ylabel(r'Deviation from Nominal(%)', loc = "center", fontsize = 15)
         axs[i][0].set_xlabel(r'$Zh_\mathrm{SUM}$', fontsize = 14)
         axs[i][1].set_xlabel(r'$Zh_\mathrm{SUM}$', fontsize = 14)
         axs[i][2].set_xlabel(r'$Zh_\mathrm{SUM}$', fontsize = 14)
@@ -173,13 +175,12 @@ def SystematicError(systematic):
           ".pdf Has been created")
 
 
-SystematicError(["Normal",   "Cutoff"])
-SystematicError(["50Bins",   "70Bins"])
-SystematicError(["DZLow",    "DZHigh"])
-SystematicError(["VC_RD",    "VC_HH"])
-SystematicError(["TOFLow",   "TOFHigh"])
-SystematicError(["LimitLow", "LimitHigh"])
-SystematicError(["NAccept0", "NAccept2"])
-SystematicError(["CT", "CT"])
-SystematicError(["RC", "RC"])
-# SystematicError(["4DAcc", "4DAcc"])
+# SystematicError(["TOFLow",   "TOFHigh"])
+# SystematicError(["VC_RD",    "VC_HH"])
+# SystematicError(["DZLow",    "DZHigh"])
+# SystematicError(["Normal",   "Cutoff"])
+# SystematicError(["50Bins",   "70Bins"])
+# SystematicError(["NAccept0", "NAccept2"])
+# SystematicError(["LimitHigh", "LimitLow"])
+# SystematicError(["CT", "CT"])
+SystematicError(["RC", "RCInter"])

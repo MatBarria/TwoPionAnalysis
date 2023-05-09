@@ -39,15 +39,17 @@ int InterpolationRc(std::string target, TFile* fileRc, TFile* fileRcInter, TFile
     int n = target.length();
     char targetArr[n + 1];
     strcpy(targetArr, target.c_str());	
-    float RcNei, RcNext, RcPrev;
+    float Rc, RcNei, RcNext, RcPrev, RcPrevQ2, RcNextQ2, RcPrevNu, RcNextNu, RcSum;
+    float RcArray[6];
+    int counter;
+    RcNei = 1.;
 
     for(int nPion = 1; nPion <= N_PION; nPion++) { // Loops number of pions
         for(int Q2Counter = 0 ; Q2Counter < N_Q2; Q2Counter++) { // Loops Q2 bins
             for(int NuCounter = 0 ; NuCounter < N_Nu; NuCounter++) { // Loops Nu bins
                 for(int ZhCounter = 0 ; ZhCounter < N_Zh; ZhCounter++) { // Loops Zh bins;
-                    RcNei = .9;
                      //---------------------- Low Pt2 Interpolation  ------------------ 
-                    for(int Pt2Counter = 0 ; Pt2Counter < N_Pt2 - 1; Pt2Counter++) { // Pt2 bins;
+                    for(int Pt2Counter = 0 ; Pt2Counter < N_Pt2 - 3; Pt2Counter++) { // Pt2 bins;
 
                         // Read the actual bin an the two neiberhoods
                         TH1F *histData  = (TH1F*) fileData->Get(Form("DataCorr2_%s_%i%i%i%i_%i",
@@ -64,6 +66,16 @@ int InterpolationRc(std::string target, TFile* fileRc, TFile* fileRcInter, TFile
                             targetArr, Q2Counter, NuCounter, ZhCounter, Pt2Counter -1 , nPion));
                         TH1F *histNext = (TH1F*) fileRc->Get(Form("RcFactor_%s_%i%i%i%i_%i", 
                             targetArr, Q2Counter, NuCounter, ZhCounter, Pt2Counter + 1 , nPion));
+
+                        TH1F *histPrevQ2 = (TH1F*) fileRc->Get(Form("RcFactor_%s_%i%i%i%i_%i", 
+                            targetArr, Q2Counter - 1, NuCounter, ZhCounter, Pt2Counter, nPion));
+                        TH1F *histNextQ2 = (TH1F*) fileRc->Get(Form("RcFactor_%s_%i%i%i%i_%i", 
+                            targetArr, Q2Counter + 1, NuCounter, ZhCounter, Pt2Counter , nPion));
+                        
+                        TH1F *histPrevNu = (TH1F*) fileRc->Get(Form("RcFactor_%s_%i%i%i%i_%i", 
+                            targetArr, Q2Counter, NuCounter - 1, ZhCounter, Pt2Counter , nPion));
+                        TH1F *histNextNu = (TH1F*) fileRc->Get(Form("RcFactor_%s_%i%i%i%i_%i", 
+                            targetArr, Q2Counter, NuCounter + 1, ZhCounter, Pt2Counter, nPion));
 
                         if(hist == NULL) {
                             hist  = new TH1F(Form("RcFactor_%s_%i%i%i%i_%i",
@@ -82,19 +94,64 @@ int InterpolationRc(std::string target, TFile* fileRc, TFile* fileRcInter, TFile
                             SetEmptyHistogram(histNext);
                         }
 
+                        if(histPrevQ2 == NULL ) { 
+                            histPrevQ2  = new TH1F("EmptyPrevQ2", "", N_Phi, -180, 180);
+                            SetEmptyHistogram(histPrev);
+                        }
+        
+                        if(histNextQ2 == NULL ) { 
+                            histNextQ2 = new TH1F("EmptyNextQ2", "", N_Phi, -180, 180);
+                            SetEmptyHistogram(histNext);
+                        }
+
+                        if(histPrevNu == NULL ) { 
+                            histPrevNu  = new TH1F("EmptyPrevNu", "", N_Phi, -180, 180);
+                            SetEmptyHistogram(histPrev);
+                        }
+        
+                        if(histNextNu == NULL ) { 
+                            histNextNu  = new TH1F("EmptyNextNu", "", N_Phi, -180, 180);
+                            SetEmptyHistogram(histNext);
+                        }
+
                         for(int PhiCounter = 1; PhiCounter <= N_Phi; PhiCounter++) {
 
-                            if(hist->GetBinContent(PhiCounter) != 0) { continue; }
+                            if(hist->GetBinContent(PhiCounter) != 0) {
+                                Rc = hist->GetBinContent(PhiCounter);
+                                hist->SetBinContent(PhiCounter, Rc);
+                                continue;
+                            }
                              
                             RcPrev = histPrev->GetBinContent(PhiCounter);
                             RcNext = histNext->GetBinContent(PhiCounter);
-                            if(RcPrev > 0.8 && RcPrev < 1.2 && RcNext > 0.8 && RcNext < 1.2) {
-                                RcNei = (RcPrev + RcNext)/2;
+                            RcPrevQ2 = histPrevQ2->GetBinContent(PhiCounter);
+                            RcNextQ2 = histNextQ2->GetBinContent(PhiCounter);
+                            RcPrevNu = histPrevQ2->GetBinContent(PhiCounter);
+                            RcNextNu = histNextQ2->GetBinContent(PhiCounter);
+
+                            RcArray[0] = RcPrev; 
+                            RcArray[1] = RcNext; 
+                            RcArray[2] = RcPrevQ2; 
+                            RcArray[3] = RcNextQ2; 
+                            RcArray[4] = RcPrevNu; 
+                            RcArray[5] = RcNextNu; 
+
+                            counter = 0;
+                            RcSum = 0;
+                            for(int i = 0; i < 6; i++) {
+                                
+                                if(RcArray[i] > 0.75 && RcArray[i] < 1.25) {
+                                    RcSum += RcArray[i];
+                                    counter++;
+                                }
+
                             }
-                            else if(RcPrev > 0.8 && RcPrev < 1.2) { RcNei = RcPrev; }
-                            else if(RcNext > 0.8 && RcNext < 1.2) { RcNei = RcNext; }
-                            if(RcNei >= 1){
-                                std::cout <<"es mayor que 1 igual a: " << RcNei << std::endl;
+                            
+                            if(counter != 0) { RcNei = RcSum/counter; }
+                            if(ZhCounter == 6){
+                                std::cout <<nPion << Q2Counter << NuCounter << ZhCounter;
+                                std::cout << " Rc Sum : " << RcSum;
+                                std::cout << " Rc: "<< RcNei << std::endl;
                             }
                             hist->SetBinContent(PhiCounter, RcNei);
                         }
@@ -108,7 +165,10 @@ int InterpolationRc(std::string target, TFile* fileRc, TFile* fileRcInter, TFile
                         delete histData;
                         delete histPrev;
                         delete histNext;
-
+                        delete histPrevQ2;
+                        delete histNextQ2;
+                        delete histPrevNu;
+                        delete histNextNu;
 
                     } // End Pt2 Loop
                 } // End ZhCounter Loop

@@ -22,6 +22,7 @@ nPion = 2
 draw_label = True
 # mpl.use('pgf')
 
+ZhBINS = [.0, .1, .2, .3, .4, .5, .6, .8, 1]
 tarList    = ['C', "Fe", "Pb", 'DC', "DFe", "DPb"]
 colorList  = ['#301437', 'orange', "lightgreen"]
 nPionList  = ["One $\pi +$", "Two $\pi+$", "Three $\pi +$"]
@@ -37,56 +38,68 @@ def EmptyBinsSimZhDist():
     fig.subplots_adjust(left = None, bottom = None, right = None, top = None,
                         wspace = 0.02, hspace = 0.02)
 
-    bins = [0, 1, 2, 3, 4, 5, 6, 7, 8]
-    # dic = {"Cut" : np.array([]), "ZhBin" : np.array([])}
+    bins = [.1, .2, .3, .4, .5, .6, .8, 1]
+    
     for i in range(3): # Loops on the diffrent targets
         for j in range(nPion): # Loops on the number of pions
 
-
-            axs[i].set_xlim(1.001, 8)
+            axs[i].set_xlim(.1, 1)
             axs[i].set_ylim(0, .3)
             with ur.open(inputDirectory + 
                 "EmptyBinsCut.root:EmptyBins_"+ tarList[i] + "_" + str(j+1)) as file:
                 dic = file.arrays(vars, library = "np")
-                # dic["Cut"] = np.concatenate((dic["Cut"],temp['Cut']), axis = 0)
-                # dic["ZhBin"] = np.concatenate((dic["ZhBin"],temp['ZhBin']), axis = 0)
             
             weights = dic["ZhBin"][dic["Cut"] == 0]
+            Zh = dic["ZhBin"][dic["Cut"] == 0]
+            
             for k in range(8):
                 if(len(dic["ZhBin"][dic["ZhBin"] == k]) == 0):
                     weights[weights == k] = 0
                 else:
                     weights[weights == k] = 1/ float(len(dic["ZhBin"][dic["ZhBin"] == k]))
 
-            axs[i].hist(dic["ZhBin"][dic["Cut"] == 0], bins = bins, weights = weights,
+            for t in range(len(Zh)):
+                for k in range(8):
+                    if Zh[t] == k:
+                        Zh[t] = ZhBINS[k] + 0.001
+
+            axs[i].hist(Zh, bins = bins, weights = weights,
                  color = colorList[j], histtype="step", label = "Solid " + nPionList[j])
-            # axs[i].hist(dic["ZhBin"][dic["Cut"] == 0], bins = bins,
-                 # color = colorList[j], histtype="step", label = nPionList[j])
-            # axs[i].hist(dic["ZhBin"], bins = bins,
-                 # color = colorList[j], histtype="step", label = nPionList[j])
-            # dic = {"Cut" : np.array([]), "ZhBin" : np.array([])}
             
+            weights = np.array([])
+            Zh = np.array([])
+
+
             with ur.open(inputDirectory + 
                 "EmptyBinsCut.root:EmptyBins_D"+ tarList[i] + "_" + str(j+1)) as file:
                 dic = file.arrays(vars, library = "np")
-                # dic["Cut"] = np.concatenate((dic["Cut"],temp['Cut']), axis = 0)
-                # dic["ZhBin"] = np.concatenate((dic["ZhBin"],temp['ZhBin']), axis = 0)
             
             weights = dic["ZhBin"][dic["Cut"] == 0]
+            Zh = dic["ZhBin"][dic["Cut"] == 0]
             for k in range(8):
                 if(len(dic["ZhBin"][dic["ZhBin"] == k]) == 0):
                     weights[weights == k] = 0
                 else:
                     weights[weights == k] = 1/ float(len(dic["ZhBin"][dic["ZhBin"] == k]))
 
-            axs[i].hist(dic["ZhBin"][dic["Cut"] == 0], bins = bins, weights = weights,
-                 color = colorList[j], histtype="step", label = 'Liquid' + nPionList[j], linestyle = "--")
+            for t in range(len(Zh)):
+                for k in range(8):
+                    if Zh[t] == k:
+                        print("Zhbin = " + str(Zh[t]) + " Zh value: " + str(ZhBINS[k]) )
+                        Zh[t] = ZhBINS[k] + 0.001
+
+            axs[i].hist(Zh, bins = bins, weights = weights,
+                 color = colorList[j], histtype="step", label = 'Liquid ' + nPionList[j], 
+                        linestyle = "--")
+
+            weights = np.array([])
+            Zh = np.array([])
+
             axs[i].tick_params(right = False, top = False, which = 'both')
-            # dic = {"Cut" : np.array([]), "ZhBin" : np.array([])}
         
         axs[i].set_xlabel(r'$Z_h$ Bin', fontsize = 14)
 
-        axs[0].set_ylabel(r'$EmptyBins$' , loc = "center", fontsize = 15)
+        axs[0].set_ylabel(r'Empty Bins' , loc = "center", fontsize = 15)
     
     axs[0].annotate(r'Carbon', xy = (0.04, 1.04), xycoords = 'axes fraction', fontsize = 15)
     axs[1].annotate(r'Iron',   xy = (0.04, 1.04), xycoords = 'axes fraction', fontsize = 15)
@@ -97,9 +110,9 @@ def EmptyBinsSimZhDist():
         axs[i].set_axisbelow(True)
 
     if draw_label: 
-        axs[0].legend(frameon = False, loc = 'upper right', fontsize = 11)
+        axs[0].legend(frameon = False, loc = 'upper left', fontsize = 11, ncol = 2)
 
-    fig.savefig(outputDirectory + "EmptyBincutZh.pdf", bbox_inches = 'tight')
+    fig.savefig(outputDirectory + "EmptyBincutZhNAccept.pdf", bbox_inches = 'tight')
     print(outputDirectory + "EmptyBinCutZh.pdf Has been created")
 
 
@@ -119,7 +132,7 @@ def EmptyBinsSimPt2Dist():
         for j in range(nPion): # Loops on the number of pions
 
             with ur.open(inputDirectory + 
-                "EmptyBins.root:EmptyBins_"+ tarList[i] + "_" + str(j+1)) as file:
+                "EmptyBinsCut.root:EmptyBins_"+ tarList[i] + "_" + str(j+1)) as file:
                 temp = file.arrays(vars, library = "np")
                 dic["Cut"] = np.concatenate((dic["Cut"],temp['Cut']), axis = 0)
                 dic["Pt2"] = np.concatenate((dic["Pt2"],temp['Pt2Bin']), axis = 0)
@@ -136,7 +149,7 @@ def EmptyBinsSimPt2Dist():
             dic = {"Cut" : np.array([]), "Pt2" : np.array([])}
             
             with ur.open(inputDirectory + 
-                "EmptyBins.root:EmptyBins_D"+ tarList[i] + "_" + str(j+1)) as file:
+                "EmptyBinsCut.root:EmptyBins_D"+ tarList[i] + "_" + str(j+1)) as file:
                 temp = file.arrays(vars, library = "np")
                 dic["Cut"] = np.concatenate((dic["Cut"],temp['Cut']), axis = 0)
                 dic["Pt2"] = np.concatenate((dic["Pt2"],temp['Pt2Bin']), axis = 0)
@@ -164,8 +177,8 @@ def EmptyBinsSimPt2Dist():
     if draw_label: 
         axs[0].legend(frameon = False, loc = 'upper left', fontsize = 11)
 
-    fig.savefig(outputDirectory + "EmptyBinSimulationZh.pdf", bbox_inches = 'tight')
-    print(outputDirectory + "EmptyBinSimulationZh.pdf Has been created")
+    fig.savefig(outputDirectory + "EmptyBincutPt2.pdf", bbox_inches = 'tight')
+    print(outputDirectory + "EmptyBinCutPt2.pdf Has been created")
 
 EmptyBinsSimZhDist()
-# EmptyBinsSimPt2Dist()
+EmptyBinsSimPt2Dist()

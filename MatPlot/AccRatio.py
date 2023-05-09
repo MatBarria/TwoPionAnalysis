@@ -41,25 +41,25 @@ def PtBroadZhTarSplitAccRatio():
     labelList = ["One $\pi +$", "Two $\pi+$", "Three $\pi +$"]
 
     for i in range(3): # Loops on the diffrent targets
-        axs[i].set_ylim(0.8, 5)
-        axs[i].set_xlim(0.075, 1.03)
+
+        # axs[i].set_ylim(0.8, 5)
+        # axs[i].set_xlim(0.075, 1.03)
+        axs[i].set_ylim(0.8, 1.5)
+        axs[i].set_xlim(.175, 0.88)
+
         for j in range(2): # Loops on the number of pions
+
             graphName = "PtBroad_Zh_" + tarList[i] + "_" + str(j)
-            # print(fileCorr)
-            # print(fileData)
             graphData = fileData.Get(graphName)
             graphCorr = fileCorr.Get(graphName)
-            # Extrac the data from the TGraph
-            # nPoints = graphCorr.GetN()
             nPoints = 8
+
             x  = np.ndarray(nPoints, dtype = float, buffer = graphCorr.GetX())
             x  = x + (-ZhShift + ZhShift*j) # Shit the data for readability
+            
             yData  = np.ndarray(nPoints, dtype = float, buffer = graphData.GetY())
             yCorr  = np.ndarray(nPoints, dtype = float, buffer = graphCorr.GetY())
-            # ey = np.ndarray(nPoints, dtype = float, buffer = graph.GetEY())
-            # Generate the plot
-            # axs[i].errorbar(x, y, ey, marker = "o", linestyle = "", markerfacecolor = colorList[j],
-            #                 color = colorList[j], markersize = 6, label = labelList[j])
+
             axs[i].plot(x, yData/yCorr, marker = "o", markerfacecolor = colorList[j],
                        color = colorList[j], markersize = 6, label = labelList[j],
                         linestyle = "")
@@ -74,12 +74,8 @@ def PtBroadZhTarSplitAccRatio():
     axs[1].annotate(r'Iron',   xy = (0.04, 1.04), xycoords = 'axes fraction', fontsize = 15)
     axs[2].annotate(r'Lead',   xy = (0.04, 1.04), xycoords = 'axes fraction', fontsize = 15)
 
-    axs[0].legend(frameon = True, loc = (.053,.76), fontsize = 11, 
+    axs[0].legend(frameon = True, loc = (.683,.76), fontsize = 11, 
                   handlelength = .5, handleheight = .5)
-
-    # fig.align_ylabels(axs[:])
-    # fig.savefig(outputDirectory + "RatioDataAcc.pdf", bbox_inches = 'tight')
-    # print(outputDirectory + "PtBroad_Zh_Target_RatioDataAcc.pdf Has been created")
 
     for i in range(3):
         axs[i].grid(visible = None, axis = 'both', color = '0.95')
@@ -87,7 +83,8 @@ def PtBroadZhTarSplitAccRatio():
 
 
     fig.align_ylabels(axs[:])
-    fig.savefig(outputDirectory + "RatioDataAcc.pdf", bbox_inches = 'tight')
+    # fig.savefig(outputDirectory + "RatioDataAcc.pdf", bbox_inches = 'tight')
+    fig.savefig(outputDirectory + "RatioDataAccZoom.pdf", bbox_inches = 'tight')
     print(outputDirectory + "PtBroad_Zh_Target-Grid_RatioDataAcc.pdf Has been created")
 
 

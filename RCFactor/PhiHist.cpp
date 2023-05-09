@@ -104,7 +104,9 @@ int PhiPQ(std::string target) {
 
                 histPhi->Fit(func, "q");
                 outputFile->cd();
-                histPhi->Write(Form("PhiDist Q2=%.3f Xb=%.3f Zh=%.3f Pt=%.3f", Q2, Xb, Zh, Pt));
+                //histPhi->Write(Form("PhiDist Q2=%.3f Xb=%.3f Zh=%.3f Pt=%.3f", Q2, Xb, Zh, Pt));
+                histPhi->Write(Form("PhiDist Q2=%i Nu=%i Zh=%i Pt2=%i", (int)Q2Bin, (int)NuBin, 
+                                    (int)ZhBin, (int)Pt2Bin));
                 gROOT->cd();
                 // Fit the funtion to the histogram
                 if(func->GetNDF() != 0) {

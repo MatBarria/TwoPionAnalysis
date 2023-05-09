@@ -19,17 +19,18 @@ dicSysName = {    "DZLow"      : "$\Delta Z$ Cut",
                   "NAccept0"   : "$N^i_{a=t}$",
                   "NAccept2"   : "N_Accept",
                   "NAcceptRec" : "N_Accept",
-                  "CT"         : "Clousure Test",
-                  "RC"         : "Radiative Corrections",
+                  "CT"         : "Closure Test",
+                  "RC"         : "Rad. Corrections",
                  }
 
 
 targets = ["C", "Fe", "Pb"]
+
 systematics = [["TOFLow", "TOFHigh"], ["VC_RD",  "VC_HH"], ["DZLow",  "DZHigh"], 
                ["Normal", "Cutoff"], ["50Bins", "70Bins"], ["NAccept0", "NAccept2"], 
-               ["LimitLow", "LimitHigh"], ["CT", "CT"], ["RC", "RC"]]
+               ["LimitLow", "LimitHigh"], ["CT", "CT"], ["RC", "RCInter"]]
 
-firstBin = 1
+firstBin = 2
 lastBin = 7
 
 

@@ -42,7 +42,7 @@ int InterpolationRc(std::string target, TFile* fileRc, TFile* fileRcInter) {
 
     float RcMin = 0.75;
     float RcMax = 1.25;
-    int MaxPt  = 26;
+    int MaxPt  = 20;
     float MaxDiff = 0.1;
 
     TH1F* histSafe  = new TH1F("RcFactors", "", N_Phi, -180, 180);

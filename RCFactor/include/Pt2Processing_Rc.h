@@ -4,7 +4,7 @@
 const double ChiWeight = 0.95;
 const double ndfWeight  = 0.05;
 const int N_FITS  = 15;
-const double maxChiQndf = 10;
+const double maxChiQndf = 7;
 
 double getCutoff(double* ChiArr, double* ndfArr,double* cutoff, int arrSize) {
 

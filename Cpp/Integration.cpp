@@ -24,8 +24,9 @@ int main(){
   std::cout << "Pt2 Processing" << std::endl;
   CallPt2Processing(inputDirectory , outputDirectory);
   
-  std::cout << "Q2, Nu and Zh integration" << std::endl;
-  CallZhIntegration(inputDirectory , outputDirectory);
+  std::cout << "Zh integration" << std::endl;
+  CallZhIntegration(inputDirectory , outputDirectory, ZH_SUM, N_Zh);
+  CallZhIntegration(inputDirectory , outputDirectory, 2, 7);
 
   t.Print();
 
