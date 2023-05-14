@@ -49,7 +49,7 @@ int CountEmptyBinsSim(std::string target, TFile* inputFile, TFile* outputFile) {
     for(int nPion = 1; nPion <= N_PION ; nPion++) { // Loops in every number of generated pions
 
         TNtuple* saveTuple = new TNtuple(Form("EmptyBins_%s_%i", targetArr, nPion), "", 
-                                        "Q2Bin:NuBin:ZhBin:Pt2Bin:PhiBin:Data");
+                                        "Q2Bin:NuBin:ZhBin:Pt2Bin:PhiBin:Data:Evnts");
         for(int Q2Counter = 0; Q2Counter < N_Q2; Q2Counter++ ) {
             for(int NuCounter = 0; NuCounter < N_Nu; NuCounter++ ) {
                 for(int ZhCounter = 0; ZhCounter < N_Zh; ZhCounter++ ) {
@@ -73,11 +73,13 @@ int CountEmptyBinsSim(std::string target, TFile* inputFile, TFile* outputFile) {
                             if(dataHist->GetBinContent(PhiCounter + 1) != 0 
                                     && facHist->GetBinContent(PhiCounter + 1) == 0) {
                                 saveTuple->Fill(Q2Counter, NuCounter, ZhCounter, Pt2Counter, 
-                                        PhiCounter, 0);
+                                        PhiCounter, 0, 
+                                        dataHist->GetBinContent(PhiCounter+1));
                             } else if(dataHist->GetBinContent(PhiCounter + 1) != 0 
                                     && facHist->GetBinContent(PhiCounter + 1) != 0){
                                 saveTuple->Fill(Q2Counter, NuCounter, ZhCounter, Pt2Counter, 
-                                        PhiCounter, 1);
+                                        PhiCounter, 1, 
+                                        dataHist->GetBinContent(PhiCounter+1));
                             }
                         } // End Phi loop
                     delete dataHist;
