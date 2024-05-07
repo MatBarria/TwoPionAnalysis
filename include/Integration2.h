@@ -39,21 +39,26 @@ void PhiIntegration(TFile *inputFile, TFile *outputFile, const char *target) {
                                              "", N_Pt2, Pt2_MIN, Pt2_MAX);
                     for (int Pt2Counter = 0; Pt2Counter < N_Pt2;
                          Pt2Counter++) { // Loops in Pt2
-                        // Take the hist for this bins
+                                         // Take the hist for this bins
                         TH1F *histPhi = (TH1F *)inputFile->Get(
                             Form("DataCorr2_%s_%i%i%i%i_%i", target, Q2Counter, NuCounter,
                                  ZhCounter, Pt2Counter, nPion));
+                        // TH1F *histPhi = (TH1F *)inputFile->Get(
+                        // Form("DataCorrRc_%s_%i%i%i%i_%i", target, Q2Counter, NuCounter,
+                        //   ZhCounter, Pt2Counter, nPion));
 
                         // TH1F* histPhi = (TH1F*)
                         // inputFile->Get(Form("DataCorrRc_%s_%i%i%i%i_%i", target, Q2Counter,
                         // NuCounter, ZhCounter, Pt2Counter, nPion));
 
-                        // TH1F* histPhi = (TH1F*) inputFile->Get(Form("Data_%s_%i%i%i%i_%i",
-                        // target, Q2Counter, NuCounter, ZhCounter, Pt2Counter, nPion));
+                        // TH1F *histPhi = (TH1F *)inputFile->Get(
+                        // Form("Data_%s_%i%i%i%i_%i", target, Q2Counter, NuCounter,
+                        // ZhCounter, Pt2Counter, nPion));
 
                         // If the histogram is null or empty skip this Pt2 bin
                         if (histPhi == NULL)
                             continue;
+
                         if (EmptyHist(histPhi) == 1)
                             continue;
                         double error;
@@ -90,11 +95,24 @@ void Q2NuIntegration(TFile *inputFile, TFile *outputFile, const char *target) {
             for (int NuCounter = 0; NuCounter < N_Nu; NuCounter++) { // Loops in every Nu bin
                 for (int Q2Counter = 0; Q2Counter < N_Q2;
                      Q2Counter++) { // Loops in every Q2 bin
-                    // Sum the histograms for every bin of Q2 and Nu
+                                    // Sum the histograms for every bin of Q2 and Nu
 
-                    TH1F *histPt2 =
-                        (TH1F *)inputFile->Get(Form("corr_data_Pt2_%s_%i%i%i_%i", target,
-                                                    Q2Counter, NuCounter, ZhCounter, nPion));
+                    TH1F *histPt2;
+                    if (UseCutOff == 1) {
+                        histPt2 = (TH1F *)inputFile->Get(
+                            Form("corr_data_Pt2_%s_%i%i%i_%i_interpolated", target, Q2Counter,
+                                 NuCounter, ZhCounter, nPion));
+                    }
+                    if (UseCutOff == 2) {
+                        histPt2 = (TH1F *)inputFile->Get(
+                            Form("corr_data_Pt2_%s_%i%i%i_%i_clean", target, Q2Counter,
+                                 NuCounter, ZhCounter, nPion));
+                    }
+                    if (UseCutOff == 3) {
+                        histPt2 = (TH1F *)inputFile->Get(Form("corr_data_Pt2_%s_%i%i%i_%i",
+                                                              target, Q2Counter, NuCounter,
+                                                              ZhCounter, nPion));
+                    }
 
                     if (histPt2 == NULL)
                         continue;
@@ -132,11 +150,23 @@ void NuZhIntegration(TFile *inputFile, TFile *outputFile, const char *target) {
                                                "", N_Pt2, Pt2_MIN, Pt2_MAX);
             for (int NuCounter = 0; NuCounter < N_Nu; NuCounter++) {
                 for (int ZhCounter = ZH_SUM; ZhCounter < N_Zh; ZhCounter++) {
-                    std::cout << "Zh bin: " << ZhCounter << std::endl;
 
-                    TH1F *histPt2 =
-                        (TH1F *)inputFile->Get(Form("corr_data_Pt2_%s_%i%i%i_%i", target,
-                                                    Q2Counter, NuCounter, ZhCounter, nPion));
+                    TH1F *histPt2;
+                    if (UseCutOff == 1) {
+                        histPt2 = (TH1F *)inputFile->Get(
+                            Form("corr_data_Pt2_%s_%i%i%i_%i_interpolated", target, Q2Counter,
+                                 NuCounter, ZhCounter, nPion));
+                    }
+                    if (UseCutOff == 2) {
+                        histPt2 = (TH1F *)inputFile->Get(
+                            Form("corr_data_Pt2_%s_%i%i%i_%i_clean", target, Q2Counter,
+                                 NuCounter, ZhCounter, nPion));
+                    }
+                    if (UseCutOff == 3) {
+                        histPt2 = (TH1F *)inputFile->Get(Form("corr_data_Pt2_%s_%i%i%i_%i",
+                                                              target, Q2Counter, NuCounter,
+                                                              ZhCounter, nPion));
+                    }
                     // Sum the histograms for every bin of Zh and Nu
                     histPt2Integrated->Add(histPt2);
                     delete histPt2;
@@ -171,9 +201,24 @@ void Q2ZhIntegration(TFile *inputFile, TFile *outputFile, const char *target) {
             for (int ZhCounter = ZH_SUM; ZhCounter < N_Zh; ZhCounter++) {
                 for (int Q2Counter = 0; Q2Counter < N_Q2; Q2Counter++) {
 
-                    TH1F *histPt2 =
-                        (TH1F *)inputFile->Get(Form("corr_data_Pt2_%s_%i%i%i_%i", target,
-                                                    Q2Counter, NuCounter, ZhCounter, nPion));
+                    TH1F *histPt2;
+                    if (UseCutOff == 1) {
+                        histPt2 = (TH1F *)inputFile->Get(
+                            Form("corr_data_Pt2_%s_%i%i%i_%i_interpolated", target, Q2Counter,
+                                 NuCounter, ZhCounter, nPion));
+                    }
+                    if (UseCutOff == 2) {
+                        histPt2 = (TH1F *)inputFile->Get(
+                            Form("corr_data_Pt2_%s_%i%i%i_%i_clean", target, Q2Counter,
+                                 NuCounter, ZhCounter, nPion));
+                    }
+                    if (UseCutOff == 3) {
+                        histPt2 = (TH1F *)inputFile->Get(Form("corr_data_Pt2_%s_%i%i%i_%i",
+                                                              target, Q2Counter, NuCounter,
+                                                              ZhCounter, nPion));
+                    }
+                    // Sum the histograms for every bin of Zh and Nu
+                    histPt2Integrated->Add(histPt2);
                     histPt2Integrated->Add(histPt2);
                     delete histPt2;
 
@@ -211,18 +256,8 @@ void ZhIntegration(TFile *inputFile, TFile *outputFile, const char *target, int 
              ZhCounter++) { // Loops in every Zh bin
 
             TH1F *histPt2;
-            if (UseCutOff == 1) {
-                histPt2 = (TH1F *)inputFile->Get(
-                    Form("corr_data_Pt2_%s_%i_%i_interpolated", target, ZhCounter, nPion));
-            }
-            if (UseCutOff == 2) {
-                histPt2 = (TH1F *)inputFile->Get(
-                    Form("corr_data_Pt2_%s_%i_%i_clean", target, ZhCounter, nPion));
-            }
-            if (UseCutOff == 3) {
-                histPt2 = (TH1F *)inputFile->Get(
-                    Form("corr_data_Pt2_%s_%i_%i", target, ZhCounter, nPion));
-            }
+            histPt2 = (TH1F *)inputFile->Get(
+                Form("corr_data_Pt2_%s_%i_%i", target, ZhCounter, nPion));
 
             histPt2Sum->Add(histPt2);
             delete histPt2;
@@ -259,7 +294,7 @@ void CallPhiIntegration(TString inputDirectory, TString outputDirectory) {
 
 void CallQ2NuIntegration(TString inputDirectory, TString outputDirectory) {
 
-    TFile *inputFile = new TFile(inputDirectory + "corr_data_Pt2.root", "READ");
+    TFile *inputFile = new TFile(inputDirectory + "corr_data_Pt2_processed.root", "READ");
     TFile *outputFile = new TFile(outputDirectory + "meanPt2_Zh.root", "RECREATE");
     gROOT->cd();
 
@@ -274,7 +309,7 @@ void CallQ2NuIntegration(TString inputDirectory, TString outputDirectory) {
 
 void CallQ2ZhIntegration(TString inputDirectory, TString outputDirectory) {
 
-    TFile *inputFile = new TFile(inputDirectory + "corr_data_Pt2.root", "READ");
+    TFile *inputFile = new TFile(inputDirectory + "corr_data_Pt2_processed.root", "READ");
     TFile *outputFile = new TFile(outputDirectory + "meanPt2_Nu.root", "RECREATE");
     gROOT->cd();
 
@@ -289,7 +324,7 @@ void CallQ2ZhIntegration(TString inputDirectory, TString outputDirectory) {
 
 void CallNuZhIntegration(TString inputDirectory, TString outputDirectory) {
 
-    TFile *inputFile = new TFile(inputDirectory + "corr_data_Pt2.root", "READ");
+    TFile *inputFile = new TFile(inputDirectory + "corr_data_Pt2_processed.root", "READ");
     TFile *outputFile = new TFile(outputDirectory + "meanPt2_Q2.root", "RECREATE");
     gROOT->cd();
 
@@ -305,8 +340,7 @@ void CallNuZhIntegration(TString inputDirectory, TString outputDirectory) {
 void CallZhIntegration(TString inputDirectory, TString outputDirectory, int firstBin,
                        int lastBin) {
 
-    TFile *inputFile = new TFile(inputDirectory + "corr_data_Pt2.root", "READ");
-    TFile *inputFile = new TFile(inputDirectory + "meanPt2_Zh_processed.root", "READ");
+    TFile *inputFile = new TFile(inputDirectory + "meanPt2_Zh.root", "READ");
     TString outputFileName;
 
     if (lastBin == N_Zh) {

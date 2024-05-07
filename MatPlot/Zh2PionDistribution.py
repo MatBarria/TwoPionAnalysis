@@ -95,7 +95,7 @@ def Zh2DDistribution():
 
                     if flag1:
                         axs[i].fill_between((hBroad[1][k], hBroad[1][k+1]), 1, hBroad[2][j],
-                                            color='grey', label = '$Zh_1>Zh_{Sum}$')
+                                            color='grey', label = '$Zh_1>Z^{+}_{h}$')
                         flag1 = False
                     else:
                         axs[i].fill_between((hBroad[1][k], hBroad[1][k+1]), 1, 
@@ -116,9 +116,12 @@ def Zh2DDistribution():
 
     # Set the labels for the three plots
     axs[0].set_ylabel(r'$Zh_1$', loc = "center", fontsize = 15)
-    axs[0].set_xlabel(r'$Zh_{SUM}$', fontsize = 14)
-    axs[1].set_xlabel(r'$Zh_{SUM}$', fontsize = 14)
-    axs[2].set_xlabel(r'$Zh_{SUM}$', fontsize = 14)
+    # axs[0].set_xlabel(r'$Zh_{SUM}$', fontsize = 14)
+    # axs[1].set_xlabel(r'$Zh_{SUM}$', fontsize = 14)
+    # axs[2].set_xlabel(r'$Zh_{SUM}$', fontsize = 14)
+    axs[0].set_xlabel(r'$Z^{+}_{h}$', fontsize = 14)
+    axs[1].set_xlabel(r'$Z^{+}_{h}$', fontsize = 14)
+    axs[2].set_xlabel(r'$Z^{+}_{h}$', fontsize = 14)
 
     axs[0].legend(frameon = True, loc = 'upper left', fontsize = 11, framealpha = 1)
     
@@ -230,7 +233,8 @@ def Zh2DDistZhSumNorm():
 
     # Set the labels for the three plots
     axs.set_ylabel(r'$Zh_1$', loc = "center", fontsize = 15)
-    axs.set_xlabel(r'$Zh_{SUM}$', fontsize = 14)
+    # axs.set_xlabel(r'$Zh_{SUM}$', fontsize = 14)
+    axs.set_xlabel(r'$Z^{+}_{h}$', fontsize = 14)
 
     axs.legend(frameon = True, loc = 'upper left', fontsize = 11, framealpha = 1)
     
@@ -335,7 +339,8 @@ def Zh2DDist():
 
     # Set the labels for the three plots
     axs.set_ylabel(r'$Zh_1$', loc = "center", fontsize = 15)
-    axs.set_xlabel(r'$Zh_{SUM}$', fontsize = 14)
+    # axs.set_xlabel(r'$Zh_{SUM}$', fontsize = 14)
+    axs.set_xlabel(r'$Z^{+}_{h}$', fontsize = 14)
 
     axs.legend(frameon = True, loc = 'upper left', fontsize = 11, framealpha = 1)
     
@@ -361,6 +366,6 @@ def Zh2DDist():
 
 
 
-# Zh2DDistribution()
+Zh2DDistribution()
 Zh2DDistZhSumNorm()
 Zh2DDist()

@@ -26,24 +26,24 @@ echo "-----Interpolation-----"
 ./Interpolate_Rc_Empty 
 echo "-----Apply Rc factors-----"
 ./ApplyRcFactor 
-echo "-----Integrate histograms-----"
-./Integration_Rc
-echo "-----Broadening-----"
-./Broadening_Rc
-#./Percentaje_Rc
-echo "-----Pt2Distribution-----"
-./Pt2Distributions_Rc
-echo "-----Ratio Cpp-----"
-./DivAccRc
+#echo "-----Integrate histograms-----"
+#./Integration_Rc
+#echo "-----Broadening-----"
+#./Broadening_Rc
+##./Percentaje_Rc
+#echo "-----Pt2Distribution-----"
+#./Pt2Distributions_Rc
+#echo "-----Ratio Cpp-----"
+#./DivAccRc
 
 cd ../MatPlot
 
-echo "-----Plots-----"
-python3 Plot_Rc.py
-echo "-----Percentaje-----"
-#python3 Percentaje_Rc.py
-python3 SystematicRc.py
-echo "-----Ratio-----"
-python3 AccRcRatio.py
-echo "-----Pt2 Distributionsv-----"
-python3 Pt2Distribution.py
+#echo "-----Plots-----"
+#python3 Plot_Rc.py
+#echo "-----Percentaje-----"
+##python3 Percentaje_Rc.py
+#python3 SystematicRc.py
+#echo "-----Ratio-----"
+#python3 AccRcRatio.py
+#echo "-----Pt2 Distributionsv-----"
+#python3 Pt2Distribution.py

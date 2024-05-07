@@ -12,7 +12,7 @@ int AccEvnt(std::string target);
 float Pt2_BINS_Corr[N_Pt2_Corr+1];
 float Phi_BINS_Corr[N_Phi_Corr+1];
 
-const char* VarList = "Q2:Nu:Zh:Pt2:PhiPQ:YC:VC_TM:Zh_1:Zh_2:Zh_3:Acc:FalPos:AccE:FalPosE";
+const char* VarList = "Q2:Nu:Zh:Pt2:PhiPQ:YC:VC_TM:Zh_1:Zh_2:Zh_3:Acc:AccE";
 
 int main() {
 
@@ -49,7 +49,7 @@ int AccEvnt(std::string target) {
     TFile *fileData = new TFile(Form(dataDirectory + "VecSum_%s.root", targetArr), "READ");
     TFile *fileDataCorr = new TFile(inputDirectory + "corr_data_Phi_Inter.root", "READ");
 
-    float *vars         = new Float_t[14];
+    float *vars         = new Float_t[12];
 
     int Q2Bin, NuBin, ZhBin, Pt2Bin, PhiBin;
     //bool InPS; // True if the event is in the phase space
@@ -132,44 +132,34 @@ int AccEvnt(std::string target) {
                 
             //std::cout << Q2Bin << NuBin << ZhBin << Pt2Bin << PhiBin << std::endl;
             // Look for the Acc Factors
-            TH1F *PhiHistAccFac, *PhiHistAccFalPos; 
+            TH1F *PhiHistAccFac; 
             if (vars[6] == 1) {
-                PhiHistAccFac = (TH1F*) fileDataCorr->Get(Form("AccFactor_D%s_%i%i%i%i_%i", 
-                            targetArr, Q2Bin, NuBin, ZhBin, Pt2Bin, nPion)); 
-                PhiHistAccFalPos = (TH1F*) fileDataCorr->Get(Form("FalPosFactor_D%s_%i%i%i%i_%i", 
+                PhiHistAccFac = (TH1F*) fileDataCorr->Get(Form("FinalFactor_D%s_%i%i%i%i_%i", 
                             targetArr, Q2Bin, NuBin, ZhBin, Pt2Bin, nPion)); 
             }
             if (vars[6] == 2) {
-                PhiHistAccFac = (TH1F*) fileDataCorr->Get(Form("AccFactor_%s_%i%i%i%i_%i",
-                            targetArr, Q2Bin, NuBin, ZhBin, Pt2Bin, nPion)); 
-                PhiHistAccFalPos = (TH1F*) fileDataCorr->Get(Form("FalPosFactor_%s_%i%i%i%i_%i", 
+                PhiHistAccFac = (TH1F*) fileDataCorr->Get(Form("FinalFactor_%s_%i%i%i%i_%i",
                             targetArr, Q2Bin, NuBin, ZhBin, Pt2Bin, nPion)); 
             }
 
             if (vars[6] == 0) {
                 PhiHistAccFac = NULL;
-                PhiHistAccFalPos = NULL;
             }
             //std::cout << "here 3" << std::endl;
             if(PhiHistAccFac != NULL) {
 
                 vars[10] = PhiHistAccFac->GetBinContent(PhiBin+1); 
-                vars[11] = PhiHistAccFalPos->GetBinContent(PhiBin+1); 
-                vars[12] = PhiHistAccFac->GetBinError(PhiBin+1); 
-                vars[13] = PhiHistAccFalPos->GetBinError(PhiBin+1); 
+                vars[11] = PhiHistAccFac->GetBinError(PhiBin+1); 
 
             } else {
 
                 vars[10] = 0;
                 vars[11] = 0;
-                vars[12] = 0;
-                vars[13] = 0;
 
             }
             ntupleSafe->Fill(vars);
 
             delete PhiHistAccFac;
-            delete PhiHistAccFalPos;
 
         } // End paricle loop
 

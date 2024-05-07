@@ -17,11 +17,12 @@ nBins = {"Q2": 3, "Nu": 3, "Zh": 8, "FullIntegrated": 1}
 
 systematics = [["TOFLow", "TOFHigh"], ["VC_RD",  "VC_HH"], ["DZLow",  "DZHigh"], 
                ["Normal", "Cutoff"], ["50Bins", "70Bins"], ["NAccept0", "NAccept2"], 
-               ["LimitLow", "LimitHigh"], ["CT", "CT"], ["RC", "RC"]]
+               ["LimitLow", "LimitHigh"], ["CT", "CT"], ["RC", "RC"], 
+               ["AccInter", "AccInter"]]
 
-variable = "FullIntegrated"
+variable = "Zh"
 firstBin = 0
-lastBin = 1
+lastBin = 7
 
 decimals = 4
 

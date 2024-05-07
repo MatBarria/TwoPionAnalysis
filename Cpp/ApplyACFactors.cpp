@@ -103,7 +103,7 @@ int ApplyAccFactors(std::string target,TFile* fileOutput) {
         ntupleData->SetBranchAddress("YC",&Yc);
         ntupleData->SetBranchAddress("VC_TM",&Vc);
         ntupleData->SetBranchAddress("Acc",&Acc);
-        ntupleData->SetBranchAddress("FalPos",&FalPos);
+        //ntupleData->SetBranchAddress("FalPos",&FalPos);
 
 
         for(int i = 0; i < ntupleData->GetEntries() ; i++) { // Loops in every detected paricle
@@ -111,7 +111,7 @@ int ApplyAccFactors(std::string target,TFile* fileOutput) {
             ntupleData->GetEntry(i);
             Q2Bin = -99; NuBin = -99; ZhBin = -99; Pt2Bin = -99;
 
-            if(Vc != VCData || TMath::Abs(Yc) > 1.4 || Acc == 0 || FalPos == 0) { 
+            if(Vc != VCData || TMath::Abs(Yc) > 1.4 || Acc == 0) { 
                 continue; }
             // Search in which Q2 bin is the event
             for(int Q2Counter = 0; Q2Counter < N_Q2; Q2Counter++) { // Loops in every Q2 bin
@@ -155,7 +155,7 @@ int ApplyAccFactors(std::string target,TFile* fileOutput) {
             //std::cout << Q2Bin << NuBin << ZhBin << Pt2Bin << std::endl;
             //std::cout << Pt2Bin << std::endl;
             //std::cout << "Filling" << std::endl;
-            PhiHistograms[Q2Bin][NuBin][ZhBin][Pt2Bin]->Fill(PhiPQ, FalPos/Acc);
+            PhiHistograms[Q2Bin][NuBin][ZhBin][Pt2Bin]->Fill(PhiPQ, 1/Acc);
             //std::cout << "Post Filling" << std::endl;
 
         } // End paricle loop
